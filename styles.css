@@ -15,3 +15,19 @@ main{max-width:1120px;margin:auto;padding:32px 24px 72px}.hero{text-align:center
 .pair-list{grid-template-columns:1fr}
 .pair-card p+p{margin-top:9px}
 @media(max-width:700px){.reading-section{padding:17px}.reading-section p{font-size:14px;line-height:1.7}}
+
+.personality-section{padding:22px;border:1px solid #ded1f0;border-radius:22px;background:linear-gradient(145deg,#f7f1ff,#fff)}
+.personality-section>h3{margin:0 0 7px;color:var(--purple);font-size:21px}
+.personality-intro{margin:0 0 17px;color:#665a71;line-height:1.7;font-size:14px}
+.trait-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.trait-card{padding:18px;border:1px solid #e7dcf0;border-radius:18px;background:#fff}
+.trait-title span{display:block;color:var(--pink);font-size:11px;font-weight:850}
+.trait-title h4{margin:3px 0 8px;font-size:17px}
+.trait-source{color:#6b5c78!important;font-size:13px!important}
+.trait-card>p{margin:7px 0;line-height:1.65;color:#574d63;font-size:14px}
+.trait-good,.trait-watch{margin-top:12px;padding:12px;border-radius:14px}
+.trait-good{background:#ecfaf3;border:1px solid #cbeedc}
+.trait-watch{background:#fff5ed;border:1px solid #f3ddc8}
+.trait-good>b{color:#167651}.trait-watch>b{color:#ad5d16}
+.trait-good p,.trait-watch p{margin:4px 0 0;color:#514a58;font-size:13px;line-height:1.65}
+@media(max-width:700px){.personality-section{padding:17px}.trait-grid{grid-template-columns:1fr}.trait-card{padding:16px}}
