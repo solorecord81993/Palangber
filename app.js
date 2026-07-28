@@ -47,21 +47,57 @@
   };
 
 
-  const buildTraitCard = (title, item) => {
-    const primaryTheme = item.themes.split(",")[0];
-    const good = item.polarity === "caution"
-      ? "แม้เป็นคู่ที่ต้องระวัง แต่เมื่อรู้ทันตนเองจะเปลี่ยนความไวและแรงผลักดันให้กลายเป็นความเด็ดขาดและประสบการณ์ได้"
-      : describeTheme(primaryTheme);
-    const watch = item.polarity === "positive"
-      ? "ด้านดีที่มากเกินไปอาจทำให้มั่นใจหรือรับภาระมากเกินจำเป็น จึงควรรักษาความพอดีและรับฟังข้อมูลที่ต่างจากความคิดตนเอง"
-      : describePolarity(item.polarity) + " " + item.advice;
+  const traitCategories = [
+    {
+      key: "thinking",
+      title: "ความคิดและการตัดสินใจ",
+      themes: ["ปัญญา", "การเรียนรู้", "การตัดสินใจ", "การวางแผน", "สัญชาตญาณ", "ความคิดสร้างสรรค์", "เทคโนโลยี"]
+    },
+    {
+      key: "social",
+      title: "การพูดและการเข้าสังคม",
+      themes: ["การสื่อสาร", "ความสัมพันธ์", "เสน่ห์", "เครือข่าย", "ชื่อเสียง", "ผู้นำ"]
+    },
+    {
+      key: "emotion",
+      title: "อารมณ์และความสัมพันธ์ใกล้ชิด",
+      themes: ["อารมณ์", "ความรัก", "ความเครียด", "สติ", "จิตใจ", "ความลับ"]
+    },
+    {
+      key: "work",
+      title: "การทำงานและการจัดการชีวิต",
+      themes: ["การงาน", "ธุรกิจ", "การเงิน", "การลงมือทำ", "ความรับผิดชอบ", "อำนาจ", "โอกาส", "ความมั่นคง", "การแข่งขัน"]
+    }
+  ];
 
-    return '<article class="trait-card">' +
-      '<div class="trait-title"><span>นิสัยด้าน</span><h4>' + escapeHtml(title) + '</h4></div>' +
-      '<p class="trait-source">สะท้อนเด่นจากคู่ <b>' + escapeHtml(item.visiblePair) + ' · ' + escapeHtml(item.title) + '</b></p>' +
-      '<p>' + escapeHtml(item.summary) + '</p>' +
-      '<div class="trait-good"><b>ด้านดี</b><p>' + escapeHtml(good) + '</p></div>' +
-      '<div class="trait-watch"><b>ด้านที่ต้องระวัง</b><p>' + escapeHtml(watch) + '</p></div>' +
+  const analyzeTrait = (items, category) => {
+    const relevant = items.filter((item) =>
+      item.themes.split(",").some((theme) => category.themes.includes(theme))
+    );
+    const pool = relevant.length ? relevant : items;
+    const totalWeight = pool.reduce((total, item) => total + item.weight, 0);
+    const score = Math.round(pool.reduce((total, item) => total + item.score * item.weight, 0) / totalWeight);
+    const strongest = [...pool].sort((a, b) => b.score - a.score || b.weight - a.weight)[0];
+    const caution = [...pool].sort((a, b) => a.score - b.score || b.weight - a.weight)[0];
+    const label = score >= 35 ? "จุดแข็งเด่น" : score >= 5 ? "ค่อนข้างส่งเสริม" : score > -20 ? "พลังผสม" : "ควรดูแลเป็นพิเศษ";
+    const tone = score >= 35 ? "good" : score >= 5 ? "positive" : score > -20 ? "mixed" : "caution";
+    return { ...category, score, strongest, caution, label, tone, hasDirectMatch: relevant.length > 0 };
+  };
+
+  const buildTraitCard = (trait) => {
+    const scorePrefix = trait.score > 0 ? "+" : "";
+    const cautionText = trait.caution.score < 0
+      ? trait.caution.summary + " " + trait.caution.advice
+      : "ไม่พบคู่เลขลบเด่นในด้านนี้ แต่ควรระวังการใช้จุดแข็งของคู่ " + trait.caution.visiblePair + " มากเกินพอดี — " + trait.caution.advice;
+
+    return '<article class="trait-card trait-' + trait.tone + '">' +
+      '<header class="trait-header"><div><span>นิสัยด้าน</span><h4>' + escapeHtml(trait.title) + '</h4></div>' +
+      '<div class="trait-score"><strong>' + scorePrefix + trait.score + '</strong><small>' + escapeHtml(trait.label) + '</small></div></header>' +
+      '<p class="trait-note">' + (trait.hasDirectMatch ? "คำนวณจากคู่เลขที่เกี่ยวกับด้านนี้ในเบอร์โดยตรง" : "ไม่พบคู่เลขเฉพาะด้านนี้ จึงอ่านจากภาพรวมของเบอร์") + '</p>' +
+      '<div class="trait-detail trait-good"><span>ด้านดีจากคู่ ' + escapeHtml(trait.strongest.visiblePair) + '</span>' +
+      '<p><b>' + escapeHtml(trait.strongest.title) + '</b> — ' + escapeHtml(trait.strongest.summary) + '</p></div>' +
+      '<div class="trait-detail trait-watch"><span>ด้านที่ต้องระวังจากคู่ ' + escapeHtml(trait.caution.visiblePair) + '</span>' +
+      '<p><b>' + escapeHtml(trait.caution.title) + '</b> — ' + escapeHtml(cautionText) + '</p></div>' +
       '</article>';
   };
 
@@ -165,13 +201,7 @@
     const caution = pairCards
       .filter((item) => item.polarity !== "positive")
       .sort((a, b) => a.score - b.score)[0];
-    const findTraitPair = (themes, fallbackIndex) =>
-      pairCards.find((item) => item.themes.split(",").some((theme) => themes.includes(theme))) ||
-      pairCards[Math.min(fallbackIndex, pairCards.length - 1)];
-    const thinkingPair = findTraitPair(["ปัญญา", "การตัดสินใจ", "การวางแผน", "สัญชาตญาณ", "การเรียนรู้"], 0);
-    const socialPair = findTraitPair(["การสื่อสาร", "ความสัมพันธ์", "เสน่ห์", "เครือข่าย"], 1);
-    const emotionPair = findTraitPair(["อารมณ์", "ความรัก", "ความเครียด", "สติ", "จิตใจ"], 2);
-    const workPair = findTraitPair(["การงาน", "ผู้นำ", "ธุรกิจ", "ความรับผิดชอบ", "การลงมือทำ"], 3);
+    const personalityTraits = traitCategories.map((category) => analyzeTrait(pairCards, category));
     const workThemes = mainThemes.filter((theme) => ["การงาน", "ธุรกิจ", "ผู้นำ", "ปัญญา", "การสื่อสาร", "โอกาส"].includes(theme));
     const peopleThemes = mainThemes.filter((theme) => ["ความรัก", "ความสัมพันธ์", "อารมณ์", "เสน่ห์", "ความเครียด"].includes(theme));
 
@@ -182,14 +212,9 @@
       ' ลักษณะที่เด่นที่สุดมาจากคู่ <b>' + escapeHtml(strongest.visiblePair) + ' ' + escapeHtml(strongest.title) + '</b>' +
       (second ? ' และมีคู่ <b>' + escapeHtml(second.visiblePair) + ' ' + escapeHtml(second.title) + '</b> เข้ามาเสริม' : '') + ' เจ้าของเบอร์จึงมักแสดงจุดเด่นหลายด้านพร้อมกัน แต่ต้องจัดลำดับให้ชัดเพื่อไม่ให้พลังแต่ละคู่ดึงกันคนละทิศทาง</p>' +
       '<p>ธีมสำคัญของเบอร์คือ <b>' + escapeHtml(mainThemes.join(" • ")) + '</b> เรื่องเหล่านี้มักเข้ามามีบทบาทในการเลือกงาน การใช้เงิน และการสร้างความสัมพันธ์ คำทำนายสะท้อนแนวโน้มของพฤติกรรม ไม่ได้กำหนดว่าเหตุการณ์ต้องเกิดขึ้นตายตัว จึงควรนำไปเทียบกับประสบการณ์จริงของเจ้าของเบอร์ด้วย</p></section>' +
-      '<section class="personality-section"><h3>วิเคราะห์นิสัยเจ้าของเบอร์รายด้าน</h3>' +
-      '<p class="personality-intro">ส่วนนี้อ่านลักษณะนิสัยจากคู่เลขที่มีน้ำหนักเด่นในแต่ละมุม จึงแสดงทั้งศักยภาพด้านดีและพฤติกรรมที่ควรระวังเมื่อเครียด รีบ หรือใช้พลังมากเกินไป</p>' +
-      '<div class="trait-grid">' +
-      buildTraitCard("วิธีคิดและการตัดสินใจ", thinkingPair) +
-      buildTraitCard("การพูดและการเข้าสังคม", socialPair) +
-      buildTraitCard("อารมณ์และความรู้สึกภายใน", emotionPair) +
-      buildTraitCard("การทำงานและความรับผิดชอบ", workPair) +
-      '</div></section>' +
+      '<section class="personality-section"><div class="section-heading"><div><span>อ่านจากคู่เลขจริงในเบอร์</span><h3>นิสัยเจ้าของเบอร์: จุดเด่นและจุดที่ต้องดูแล</h3></div></div>' +
+      '<p class="personality-intro">แต่ละการ์ดคำนวณจากคู่เลขที่เกี่ยวข้องกับด้านนั้นในเบอร์ที่กรอก จึงเปลี่ยนตามเบอร์จริง ไม่ใช้ข้อความชุดเดิมกับทุกเบอร์</p>' +
+      '<div class="trait-grid">' + personalityTraits.map(buildTraitCard).join("") + '</div></section>' +
       '<section class="reading-section"><h3>การงาน ความสำเร็จ และการเงิน</h3>' +
       '<p>' + (workThemes.length ? 'พลังด้าน <b>' + escapeHtml(workThemes.join(" และ ")) + '</b> ปรากฏเด่น จึงเหมาะกับงานที่ได้ใช้ความคิด การประสานงาน การตัดสินใจ หรือการพัฒนาสิ่งใหม่' : 'พลังด้านงานกระจายหลายเรื่อง จึงควรเลือกเส้นทางจากความถนัดจริงและสร้างระบบให้ทำต่อเนื่อง') + ' หากตั้งเป้าหมายเป็นช่วงและวัดผลจากสิ่งที่ทำได้ จะใช้พลังของเบอร์ได้ดีกว่าการรอจังหวะเพียงอย่างเดียว</p>' +
       '<p>ด้านการเงิน มีโอกาสสร้างรายได้จากความสามารถและเครือข่าย แต่ควรดูทั้งการหาเงินและการรักษาเงิน คู่เลขที่ให้โอกาสอาจทำให้กล้าลงทุน ขณะที่คู่กดดันอาจทำให้ตัดสินใจเร็ว ทางที่ดีควรกำหนดงบประมาณ เงินสำรอง และเพดานความเสี่ยงก่อนรับข้อเสนอสำคัญ</p></section>' +
