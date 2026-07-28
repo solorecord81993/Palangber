@@ -44,3 +44,18 @@ main{max-width:1120px;margin:auto;padding:32px 24px 72px}.hero{text-align:center
 .trait-score{min-width:76px;padding:7px 8px;border-radius:13px;background:#f3edfa;text-align:center}.trait-score strong{display:block;color:var(--purple);font-size:22px;line-height:1}.trait-score small{display:block;margin-top:4px;color:#675874;font-size:10px;font-weight:800}
 .trait-note{margin:0;padding:0 18px 13px;color:#786b85;font-size:12px;line-height:1.55}.trait-detail{margin:0 12px 12px;padding:12px 13px;border-radius:14px}.trait-detail>span{display:block;margin-bottom:5px;font-size:12px;font-weight:850}.trait-detail p{margin:0;color:#514a5b;font-size:13px;line-height:1.65}.trait-detail.trait-good{background:#ebfaf2;border:1px solid #c9ebd9}.trait-detail.trait-good>span{color:#14734e}.trait-detail.trait-watch{background:#fff6ee;border:1px solid #f1dbc5}.trait-detail.trait-watch>span{color:#ad5c14}
 @media(max-width:700px){.personality-section{padding:18px}.section-heading h3{font-size:20px}.trait-grid{grid-template-columns:1fr;gap:13px}.trait-header{padding:16px 16px 11px}.trait-note{padding:0 16px 12px}.trait-detail{margin:0 10px 10px;padding:11px}}
+
+/* 16-type number personality profile */
+.personality16{padding:0;overflow:hidden;border:1px solid #ddd0f0;background:#fff}
+.type-hero{padding:24px 24px 20px;color:#fff;background:linear-gradient(125deg,#5632ce,#8b4be5 55%,#dc5ba8)}
+.type-hero>span{display:block;margin-bottom:6px;font-size:12px;font-weight:850;letter-spacing:.03em;color:#f6dcff}
+.type-hero h3{margin:0;font-size:30px;letter-spacing:.01em}
+.type-hero p{max-width:720px;margin:8px 0 0;color:#f9efff;font-size:13px;line-height:1.65}
+.type-summary{margin:18px 18px 0;padding:15px 16px;border-radius:16px;background:#f7f2ff;border:1px solid #e7dcf7}
+.type-summary p{margin:0;color:#514666;font-size:14px;line-height:1.75}
+.axis-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:18px}
+.axis-card{padding:18px;border:1px solid #e6dcf0;border-radius:18px;background:#fff;box-shadow:0 6px 17px rgba(75,46,111,.05)}
+.axis-card header{display:flex;align-items:center;justify-content:space-between;gap:8px}.axis-card header span{font-size:12px;font-weight:850;color:#805fa8;letter-spacing:.08em}.axis-card header strong{border-radius:999px;padding:6px 9px;background:#f0eaff;color:#6539d5;font-size:13px}
+.axis-card h4{margin:10px 0 11px;font-size:18px}.axis-bar{height:9px;overflow:hidden;border-radius:999px;background:linear-gradient(90deg,#8c6ae3,#f0a0cb)}.axis-bar i{display:block;height:100%;background:#5d38d1;border-radius:999px}.axis-scale{display:flex;justify-content:space-between;margin:6px 0 13px;color:#7b6e89;font-size:11px;font-weight:750}
+.axis-card p{margin:9px 0 0;color:#594f62;font-size:13px;line-height:1.65}.axis-card .axis-balance{padding-top:10px;border-top:1px dashed #e5d9ee;color:#765d5f}
+@media(max-width:700px){.type-hero{padding:20px 18px}.type-hero h3{font-size:26px}.type-summary{margin:14px 14px 0}.axis-grid{grid-template-columns:1fr;gap:12px;padding:14px}.axis-card{padding:16px}}
