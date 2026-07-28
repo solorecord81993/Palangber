@@ -47,58 +47,91 @@
   };
 
 
-  const traitCategories = [
+  const personalityAxes = [
     {
-      key: "thinking",
-      title: "ความคิดและการตัดสินใจ",
-      themes: ["ปัญญา", "การเรียนรู้", "การตัดสินใจ", "การวางแผน", "สัญชาตญาณ", "ความคิดสร้างสรรค์", "เทคโนโลยี"]
+      title: "แหล่งพลัง",
+      left: { code: "E", name: "เปิดรับโลกภายนอก", themes: ["การสื่อสาร", "เครือข่าย", "เสน่ห์", "ชื่อเสียง", "ผู้นำ", "การลงมือทำ", "ธุรกิจ"] },
+      right: { code: "I", name: "ไตร่ตรองภายใน", themes: ["ปัญญา", "สติ", "สัญชาตญาณ", "จิตใจ", "ความลับ", "ความเครียด", "ความรับผิดชอบ"] }
     },
     {
-      key: "social",
-      title: "การพูดและการเข้าสังคม",
-      themes: ["การสื่อสาร", "ความสัมพันธ์", "เสน่ห์", "เครือข่าย", "ชื่อเสียง", "ผู้นำ"]
+      title: "วิธีรับข้อมูล",
+      left: { code: "S", name: "ยึดข้อเท็จจริง", themes: ["การเงิน", "การงาน", "ความมั่นคง", "ความรับผิดชอบ", "การวางแผน", "ธุรกิจ"] },
+      right: { code: "N", name: "มองความเป็นไปได้", themes: ["ความคิดสร้างสรรค์", "สัญชาตญาณ", "เทคโนโลยี", "โอกาส", "จิตใจ", "การเปลี่ยนแปลง"] }
     },
     {
-      key: "emotion",
-      title: "อารมณ์และความสัมพันธ์ใกล้ชิด",
-      themes: ["อารมณ์", "ความรัก", "ความเครียด", "สติ", "จิตใจ", "ความลับ"]
+      title: "วิธีตัดสินใจ",
+      left: { code: "T", name: "ใช้เหตุผลและระบบ", themes: ["ปัญญา", "การวางแผน", "ธุรกิจ", "การตัดสินใจ", "อำนาจ", "การเงิน"] },
+      right: { code: "F", name: "คำนึงถึงความรู้สึก", themes: ["ความรัก", "ความสัมพันธ์", "เสน่ห์", "อารมณ์", "สติ", "ผู้ใหญ่สนับสนุน"] }
     },
     {
-      key: "work",
-      title: "การทำงานและการจัดการชีวิต",
-      themes: ["การงาน", "ธุรกิจ", "การเงิน", "การลงมือทำ", "ความรับผิดชอบ", "อำนาจ", "โอกาส", "ความมั่นคง", "การแข่งขัน"]
+      title: "รูปแบบการใช้ชีวิต",
+      left: { code: "J", name: "เป็นระบบและมีแผน", themes: ["การวางแผน", "ความมั่นคง", "การงาน", "ความรับผิดชอบ", "สติ"] },
+      right: { code: "P", name: "ยืดหยุ่นและเปิดโอกาส", themes: ["โอกาส", "การเปลี่ยนแปลง", "ความคิดสร้างสรรค์", "การลงมือทำ", "การแข่งขัน", "เทคโนโลยี"] }
     }
   ];
 
-  const analyzeTrait = (items, category) => {
-    const relevant = items.filter((item) =>
-      item.themes.split(",").some((theme) => category.themes.includes(theme))
-    );
-    const pool = relevant.length ? relevant : items;
-    const totalWeight = pool.reduce((total, item) => total + item.weight, 0);
-    const score = Math.round(pool.reduce((total, item) => total + item.score * item.weight, 0) / totalWeight);
-    const strongest = [...pool].sort((a, b) => b.score - a.score || b.weight - a.weight)[0];
-    const caution = [...pool].sort((a, b) => a.score - b.score || b.weight - a.weight)[0];
-    const label = score >= 35 ? "จุดแข็งเด่น" : score >= 5 ? "ค่อนข้างส่งเสริม" : score > -20 ? "พลังผสม" : "ควรดูแลเป็นพิเศษ";
-    const tone = score >= 35 ? "strong" : score >= 5 ? "positive" : score > -20 ? "mixed" : "caution";
-    return { ...category, score, strongest, caution, label, tone, hasDirectMatch: relevant.length > 0 };
+  const personalityNames = {
+    INTJ: "นักวางกลยุทธ์", INTP: "นักคิดวิเคราะห์", ENTJ: "ผู้นำเชิงกลยุทธ์", ENTP: "นักสร้างโอกาส",
+    INFJ: "ผู้มองการณ์ไกล", INFP: "นักอุดมคติ", ENFJ: "ผู้นำเชื่อมผู้คน", ENFP: "นักสร้างแรงบันดาลใจ",
+    ISTJ: "ผู้รับผิดชอบ", ISFJ: "ผู้ดูแลอย่างมีระบบ", ESTJ: "ผู้จัดการเป้าหมาย", ESFJ: "ผู้ประสานสัมพันธ์",
+    ISTP: "นักแก้ปัญหา", ISFP: "ผู้สร้างสรรค์อ่อนโยน", ESTP: "นักลงมือทำ", ESFP: "ผู้สร้างสีสัน"
   };
 
-  const buildTraitCard = (trait) => {
-    const scorePrefix = trait.score > 0 ? "+" : "";
-    const cautionText = trait.caution.score < 0
-      ? trait.caution.summary + " " + trait.caution.advice
-      : "ไม่พบคู่เลขลบเด่นในด้านนี้ แต่ควรระวังการใช้จุดแข็งของคู่ " + trait.caution.visiblePair + " มากเกินพอดี — " + trait.caution.advice;
+  const calculateAxis = (items, axis) => {
+    const scoreSide = (side) => items
+      .map((item) => {
+        const matches = item.themes.split(",").filter((theme) => side.themes.includes(theme));
+        const value = matches.length ? item.weight * (0.75 + (item.score + 100) / 200) : 0;
+        return { item, value };
+      })
+      .filter((entry) => entry.value > 0)
+      .sort((a, b) => b.value - a.value);
 
-    return '<article class="trait-card trait-' + trait.tone + '">' +
-      '<header class="trait-header"><div><span>นิสัยด้าน</span><h4>' + escapeHtml(trait.title) + '</h4></div>' +
-      '<div class="trait-score"><strong>' + scorePrefix + trait.score + '</strong><small>' + escapeHtml(trait.label) + '</small></div></header>' +
-      '<p class="trait-note">' + (trait.hasDirectMatch ? "คำนวณจากคู่เลขที่เกี่ยวกับด้านนี้ในเบอร์โดยตรง" : "ไม่พบคู่เลขเฉพาะด้านนี้ จึงอ่านจากภาพรวมของเบอร์") + '</p>' +
-      '<div class="trait-detail trait-good"><span>ด้านดีจากคู่ ' + escapeHtml(trait.strongest.visiblePair) + '</span>' +
-      '<p><b>' + escapeHtml(trait.strongest.title) + '</b> — ' + escapeHtml(trait.strongest.summary) + '</p></div>' +
-      '<div class="trait-detail trait-watch"><span>ด้านที่ต้องระวังจากคู่ ' + escapeHtml(trait.caution.visiblePair) + '</span>' +
-      '<p><b>' + escapeHtml(trait.caution.title) + '</b> — ' + escapeHtml(cautionText) + '</p></div>' +
+    const leftEntries = scoreSide(axis.left);
+    const rightEntries = scoreSide(axis.right);
+    const leftValue = leftEntries.reduce((total, entry) => total + entry.value, 0);
+    const rightValue = rightEntries.reduce((total, entry) => total + entry.value, 0);
+    const total = leftValue + rightValue || 1;
+    const leftPercent = Math.round((leftValue / total) * 100);
+    const dominant = leftPercent >= 50 ? axis.left : axis.right;
+    const other = leftPercent >= 50 ? axis.right : axis.left;
+    const dominantEntries = leftPercent >= 50 ? leftEntries : rightEntries;
+    const otherEntries = leftPercent >= 50 ? rightEntries : leftEntries;
+    return {
+      ...axis,
+      dominant,
+      other,
+      dominantPercent: leftPercent >= 50 ? leftPercent : 100 - leftPercent,
+      leftPercent,
+      source: dominantEntries[0]?.item || items[0],
+      balance: otherEntries[0]?.item || items[1] || items[0]
+    };
+  };
+
+  const buildPersonalityProfile = (items) => {
+    const axes = personalityAxes.map((axis) => calculateAxis(items, axis));
+    const code = axes.map((axis) => axis.dominant.code).join("");
+    return { code, name: personalityNames[code] || "บุคลิกผสมผสาน", axes };
+  };
+
+  const buildAxisCard = (axis) => {
+    return '<article class="axis-card">' +
+      '<header><span>' + axis.left.code + ' ↔ ' + axis.right.code + '</span><strong>' + axis.dominant.code + ' ' + axis.dominantPercent + '%</strong></header>' +
+      '<h4>' + escapeHtml(axis.title) + ': ' + escapeHtml(axis.dominant.name) + '</h4>' +
+      '<div class="axis-bar" aria-label="' + escapeHtml(axis.title) + '"><i style="width:' + axis.leftPercent + '%"></i></div>' +
+      '<div class="axis-scale"><span>' + axis.left.code + ' ' + axis.leftPercent + '%</span><span>' + axis.right.code + ' ' + (100 - axis.leftPercent) + '%</span></div>' +
+      '<p><b>คู่เลขที่หนุน:</b> ' + escapeHtml(axis.source.visiblePair) + ' ' + escapeHtml(axis.source.title) + ' — ' + escapeHtml(axis.source.summary) + '</p>' +
+      '<p class="axis-balance"><b>มุมที่ควรบาลานซ์:</b> ' + escapeHtml(axis.balance.visiblePair) + ' ' + escapeHtml(axis.balance.title) + ' — ' + escapeHtml(axis.balance.advice) + '</p>' +
       '</article>';
+  };
+
+  const buildPersonalitySection = (profile) => {
+    const [energy, information, decision, lifestyle] = profile.axes;
+    return '<section class="personality-section personality16">' +
+      '<div class="type-hero"><span>บุคลิกแบบ 4 มิติจากคู่เลข</span><h3>' + escapeHtml(profile.code) + ' · ' + escapeHtml(profile.name) + '</h3>' +
+      '<p>รหัสนี้เกิดจากน้ำหนักของคู่เลขในเบอร์ที่กรอก โดยดู 4 มิติพร้อมกัน ไม่ใช่แบบทดสอบทางจิตวิทยาหรือการวินิจฉัยบุคลิกภาพ</p></div>' +
+      '<div class="type-summary"><p><b>ภาพรวม:</b> มีแนวโน้ม ' + escapeHtml(energy.dominant.name) + ', ' + escapeHtml(information.dominant.name) + ', ' + escapeHtml(decision.dominant.name) + ' และ ' + escapeHtml(lifestyle.dominant.name) + ' การใช้จุดเด่นให้สมดุลกับอีกฝั่งของแต่ละมิติจะช่วยให้ตัดสินใจและสัมพันธ์กับคนอื่นได้รอบด้านขึ้น</p></div>' +
+      '<div class="axis-grid">' + profile.axes.map(buildAxisCard).join("") + '</div></section>';
   };
 
   input.addEventListener("input", () => {
@@ -201,7 +234,7 @@
     const caution = pairCards
       .filter((item) => item.polarity !== "positive")
       .sort((a, b) => a.score - b.score)[0];
-    const personalityTraits = traitCategories.map((category) => analyzeTrait(pairCards, category));
+    const personalityProfile = buildPersonalityProfile(pairCards);
     const workThemes = mainThemes.filter((theme) => ["การงาน", "ธุรกิจ", "ผู้นำ", "ปัญญา", "การสื่อสาร", "โอกาส"].includes(theme));
     const peopleThemes = mainThemes.filter((theme) => ["ความรัก", "ความสัมพันธ์", "อารมณ์", "เสน่ห์", "ความเครียด"].includes(theme));
 
@@ -212,9 +245,7 @@
       ' ลักษณะที่เด่นที่สุดมาจากคู่ <b>' + escapeHtml(strongest.visiblePair) + ' ' + escapeHtml(strongest.title) + '</b>' +
       (second ? ' และมีคู่ <b>' + escapeHtml(second.visiblePair) + ' ' + escapeHtml(second.title) + '</b> เข้ามาเสริม' : '') + ' เจ้าของเบอร์จึงมักแสดงจุดเด่นหลายด้านพร้อมกัน แต่ต้องจัดลำดับให้ชัดเพื่อไม่ให้พลังแต่ละคู่ดึงกันคนละทิศทาง</p>' +
       '<p>ธีมสำคัญของเบอร์คือ <b>' + escapeHtml(mainThemes.join(" • ")) + '</b> เรื่องเหล่านี้มักเข้ามามีบทบาทในการเลือกงาน การใช้เงิน และการสร้างความสัมพันธ์ คำทำนายสะท้อนแนวโน้มของพฤติกรรม ไม่ได้กำหนดว่าเหตุการณ์ต้องเกิดขึ้นตายตัว จึงควรนำไปเทียบกับประสบการณ์จริงของเจ้าของเบอร์ด้วย</p></section>' +
-      '<section class="personality-section"><div class="section-heading"><div><span>อ่านจากคู่เลขจริงในเบอร์</span><h3>นิสัยเจ้าของเบอร์: จุดเด่นและจุดที่ต้องดูแล</h3></div></div>' +
-      '<p class="personality-intro">แต่ละการ์ดคำนวณจากคู่เลขที่เกี่ยวข้องกับด้านนั้นในเบอร์ที่กรอก จึงเปลี่ยนตามเบอร์จริง ไม่ใช้ข้อความชุดเดิมกับทุกเบอร์</p>' +
-      '<div class="trait-grid">' + personalityTraits.map(buildTraitCard).join("") + '</div></section>' +
+      buildPersonalitySection(personalityProfile) +
       '<section class="reading-section"><h3>การงาน ความสำเร็จ และการเงิน</h3>' +
       '<p>' + (workThemes.length ? 'พลังด้าน <b>' + escapeHtml(workThemes.join(" และ ")) + '</b> ปรากฏเด่น จึงเหมาะกับงานที่ได้ใช้ความคิด การประสานงาน การตัดสินใจ หรือการพัฒนาสิ่งใหม่' : 'พลังด้านงานกระจายหลายเรื่อง จึงควรเลือกเส้นทางจากความถนัดจริงและสร้างระบบให้ทำต่อเนื่อง') + ' หากตั้งเป้าหมายเป็นช่วงและวัดผลจากสิ่งที่ทำได้ จะใช้พลังของเบอร์ได้ดีกว่าการรอจังหวะเพียงอย่างเดียว</p>' +
       '<p>ด้านการเงิน มีโอกาสสร้างรายได้จากความสามารถและเครือข่าย แต่ควรดูทั้งการหาเงินและการรักษาเงิน คู่เลขที่ให้โอกาสอาจทำให้กล้าลงทุน ขณะที่คู่กดดันอาจทำให้ตัดสินใจเร็ว ทางที่ดีควรกำหนดงบประมาณ เงินสำรอง และเพดานความเสี่ยงก่อนรับข้อเสนอสำคัญ</p></section>' +
