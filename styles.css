@@ -31,3 +31,16 @@ main{max-width:1120px;margin:auto;padding:32px 24px 72px}.hero{text-align:center
 .trait-good>b{color:#167651}.trait-watch>b{color:#ad5d16}
 .trait-good p,.trait-watch p{margin:4px 0 0;color:#514a58;font-size:13px;line-height:1.65}
 @media(max-width:700px){.personality-section{padding:17px}.trait-grid{grid-template-columns:1fr}.trait-card{padding:16px}}
+
+/* Personality analysis: each card reflects the actual pairs in the entered number */
+.personality-section{padding:24px;background:linear-gradient(145deg,#fbf8ff,#fff);border:1px solid #dfd1f2}
+.section-heading span{display:block;color:var(--pink);font-size:12px;font-weight:850;letter-spacing:.02em}
+.section-heading h3{margin:4px 0 0;font-size:23px;line-height:1.25}
+.personality-intro{max-width:720px;margin:10px 0 20px;font-size:14px;line-height:1.7}
+.trait-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.trait-card{padding:0;overflow:hidden;border:1px solid #e6dcef;border-radius:20px;background:#fff;box-shadow:0 8px 20px rgba(87,53,127,.06)}
+.trait-card.trait-good{border-top:5px solid #18835c}.trait-card.trait-positive{border-top:5px solid #6850d9}.trait-card.trait-mixed{border-top:5px solid #d58a20}.trait-card.trait-caution{border-top:5px solid #c75864}
+.trait-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:18px 18px 12px}.trait-header span{display:block;color:#846f9a;font-size:12px;font-weight:750}.trait-header h4{margin:3px 0 0;font-size:18px;line-height:1.25}
+.trait-score{min-width:76px;padding:7px 8px;border-radius:13px;background:#f3edfa;text-align:center}.trait-score strong{display:block;color:var(--purple);font-size:22px;line-height:1}.trait-score small{display:block;margin-top:4px;color:#675874;font-size:10px;font-weight:800}
+.trait-note{margin:0;padding:0 18px 13px;color:#786b85;font-size:12px;line-height:1.55}.trait-detail{margin:0 12px 12px;padding:12px 13px;border-radius:14px}.trait-detail>span{display:block;margin-bottom:5px;font-size:12px;font-weight:850}.trait-detail p{margin:0;color:#514a5b;font-size:13px;line-height:1.65}.trait-detail.trait-good{background:#ebfaf2;border:1px solid #c9ebd9}.trait-detail.trait-good>span{color:#14734e}.trait-detail.trait-watch{background:#fff6ee;border:1px solid #f1dbc5}.trait-detail.trait-watch>span{color:#ad5c14}
+@media(max-width:700px){.personality-section{padding:18px}.section-heading h3{font-size:20px}.trait-grid{grid-template-columns:1fr;gap:13px}.trait-header{padding:16px 16px 11px}.trait-note{padding:0 16px 12px}.trait-detail{margin:0 10px 10px;padding:11px}}
