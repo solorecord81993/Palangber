@@ -80,7 +80,7 @@
     const strongest = [...pool].sort((a, b) => b.score - a.score || b.weight - a.weight)[0];
     const caution = [...pool].sort((a, b) => a.score - b.score || b.weight - a.weight)[0];
     const label = score >= 35 ? "จุดแข็งเด่น" : score >= 5 ? "ค่อนข้างส่งเสริม" : score > -20 ? "พลังผสม" : "ควรดูแลเป็นพิเศษ";
-    const tone = score >= 35 ? "good" : score >= 5 ? "positive" : score > -20 ? "mixed" : "caution";
+    const tone = score >= 35 ? "strong" : score >= 5 ? "positive" : score > -20 ? "mixed" : "caution";
     return { ...category, score, strongest, caution, label, tone, hasDirectMatch: relevant.length > 0 };
   };
 
