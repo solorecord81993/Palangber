@@ -46,6 +46,25 @@
     return "เป็นสัญญาณให้ระมัดระวัง ไม่ได้หมายถึงผลร้ายแน่นอน แต่ควรมีแผนสำรองและตรวจสอบการตัดสินใจสำคัญ";
   };
 
+
+  const buildTraitCard = (title, item) => {
+    const primaryTheme = item.themes.split(",")[0];
+    const good = item.polarity === "caution"
+      ? "แม้เป็นคู่ที่ต้องระวัง แต่เมื่อรู้ทันตนเองจะเปลี่ยนความไวและแรงผลักดันให้กลายเป็นความเด็ดขาดและประสบการณ์ได้"
+      : describeTheme(primaryTheme);
+    const watch = item.polarity === "positive"
+      ? "ด้านดีที่มากเกินไปอาจทำให้มั่นใจหรือรับภาระมากเกินจำเป็น จึงควรรักษาความพอดีและรับฟังข้อมูลที่ต่างจากความคิดตนเอง"
+      : describePolarity(item.polarity) + " " + item.advice;
+
+    return '<article class="trait-card">' +
+      '<div class="trait-title"><span>นิสัยด้าน</span><h4>' + escapeHtml(title) + '</h4></div>' +
+      '<p class="trait-source">สะท้อนเด่นจากคู่ <b>' + escapeHtml(item.visiblePair) + ' · ' + escapeHtml(item.title) + '</b></p>' +
+      '<p>' + escapeHtml(item.summary) + '</p>' +
+      '<div class="trait-good"><b>ด้านดี</b><p>' + escapeHtml(good) + '</p></div>' +
+      '<div class="trait-watch"><b>ด้านที่ต้องระวัง</b><p>' + escapeHtml(watch) + '</p></div>' +
+      '</article>';
+  };
+
   input.addEventListener("input", () => {
     input.value = input.value.replace(/\D/g, "").slice(0, 10);
     error.textContent = "";
@@ -146,6 +165,13 @@
     const caution = pairCards
       .filter((item) => item.polarity !== "positive")
       .sort((a, b) => a.score - b.score)[0];
+    const findTraitPair = (themes, fallbackIndex) =>
+      pairCards.find((item) => item.themes.split(",").some((theme) => themes.includes(theme))) ||
+      pairCards[Math.min(fallbackIndex, pairCards.length - 1)];
+    const thinkingPair = findTraitPair(["ปัญญา", "การตัดสินใจ", "การวางแผน", "สัญชาตญาณ", "การเรียนรู้"], 0);
+    const socialPair = findTraitPair(["การสื่อสาร", "ความสัมพันธ์", "เสน่ห์", "เครือข่าย"], 1);
+    const emotionPair = findTraitPair(["อารมณ์", "ความรัก", "ความเครียด", "สติ", "จิตใจ"], 2);
+    const workPair = findTraitPair(["การงาน", "ผู้นำ", "ธุรกิจ", "ความรับผิดชอบ", "การลงมือทำ"], 3);
     const workThemes = mainThemes.filter((theme) => ["การงาน", "ธุรกิจ", "ผู้นำ", "ปัญญา", "การสื่อสาร", "โอกาส"].includes(theme));
     const peopleThemes = mainThemes.filter((theme) => ["ความรัก", "ความสัมพันธ์", "อารมณ์", "เสน่ห์", "ความเครียด"].includes(theme));
 
@@ -156,6 +182,14 @@
       ' ลักษณะที่เด่นที่สุดมาจากคู่ <b>' + escapeHtml(strongest.visiblePair) + ' ' + escapeHtml(strongest.title) + '</b>' +
       (second ? ' และมีคู่ <b>' + escapeHtml(second.visiblePair) + ' ' + escapeHtml(second.title) + '</b> เข้ามาเสริม' : '') + ' เจ้าของเบอร์จึงมักแสดงจุดเด่นหลายด้านพร้อมกัน แต่ต้องจัดลำดับให้ชัดเพื่อไม่ให้พลังแต่ละคู่ดึงกันคนละทิศทาง</p>' +
       '<p>ธีมสำคัญของเบอร์คือ <b>' + escapeHtml(mainThemes.join(" • ")) + '</b> เรื่องเหล่านี้มักเข้ามามีบทบาทในการเลือกงาน การใช้เงิน และการสร้างความสัมพันธ์ คำทำนายสะท้อนแนวโน้มของพฤติกรรม ไม่ได้กำหนดว่าเหตุการณ์ต้องเกิดขึ้นตายตัว จึงควรนำไปเทียบกับประสบการณ์จริงของเจ้าของเบอร์ด้วย</p></section>' +
+      '<section class="personality-section"><h3>วิเคราะห์นิสัยเจ้าของเบอร์รายด้าน</h3>' +
+      '<p class="personality-intro">ส่วนนี้อ่านลักษณะนิสัยจากคู่เลขที่มีน้ำหนักเด่นในแต่ละมุม จึงแสดงทั้งศักยภาพด้านดีและพฤติกรรมที่ควรระวังเมื่อเครียด รีบ หรือใช้พลังมากเกินไป</p>' +
+      '<div class="trait-grid">' +
+      buildTraitCard("วิธีคิดและการตัดสินใจ", thinkingPair) +
+      buildTraitCard("การพูดและการเข้าสังคม", socialPair) +
+      buildTraitCard("อารมณ์และความรู้สึกภายใน", emotionPair) +
+      buildTraitCard("การทำงานและความรับผิดชอบ", workPair) +
+      '</div></section>' +
       '<section class="reading-section"><h3>การงาน ความสำเร็จ และการเงิน</h3>' +
       '<p>' + (workThemes.length ? 'พลังด้าน <b>' + escapeHtml(workThemes.join(" และ ")) + '</b> ปรากฏเด่น จึงเหมาะกับงานที่ได้ใช้ความคิด การประสานงาน การตัดสินใจ หรือการพัฒนาสิ่งใหม่' : 'พลังด้านงานกระจายหลายเรื่อง จึงควรเลือกเส้นทางจากความถนัดจริงและสร้างระบบให้ทำต่อเนื่อง') + ' หากตั้งเป้าหมายเป็นช่วงและวัดผลจากสิ่งที่ทำได้ จะใช้พลังของเบอร์ได้ดีกว่าการรอจังหวะเพียงอย่างเดียว</p>' +
       '<p>ด้านการเงิน มีโอกาสสร้างรายได้จากความสามารถและเครือข่าย แต่ควรดูทั้งการหาเงินและการรักษาเงิน คู่เลขที่ให้โอกาสอาจทำให้กล้าลงทุน ขณะที่คู่กดดันอาจทำให้ตัดสินใจเร็ว ทางที่ดีควรกำหนดงบประมาณ เงินสำรอง และเพดานความเสี่ยงก่อนรับข้อเสนอสำคัญ</p></section>' +
