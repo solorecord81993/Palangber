@@ -4,35 +4,35 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#fff8ef">
-  <meta name="description" content="วิเคราะห์พลังเบอร์ ผูกดวงโหราศาสตร์ไทย และดวงจรเป็นช่วงเวลา">
-  <title>พลังเบอร์ — เบอร์ พื้นดวงไทย และดวงจร</title>
-  <link rel="stylesheet" href="./styles.css?v=13">
+  <meta name="description" content="วิเคราะห์บุคลิก จุดแข็ง จุดอ่อน และความเข้ากันจากเบอร์โทรศัพท์กับวันเกิด">
+  <title>พลังเบอร์ — อ่านบุคลิกและความเข้ากัน</title>
+  <link rel="stylesheet" href="./styles.css?v=14">
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="./" aria-label="พลังเบอร์ หน้าแรก">
       <span class="brand-mark">๙</span>
-      <span><b>พลังเบอร์</b><small>เบอร์ · พื้นดวงไทย · ดวงจร</small></span>
+      <span><b>พลังเบอร์</b><small>บุคลิก · จุดแข็ง · ความเข้ากัน</small></span>
     </a>
     <span class="privacy-pill">ประมวลผลบนเครื่อง · ไม่บันทึกข้อมูล</span>
   </header>
 
   <main class="shell">
     <section class="hero">
-      <div class="eyebrow">เครื่องมือสะท้อนตัวตนและจังหวะชีวิต</div>
-      <h1>อ่านพลังเบอร์<br><span>ผูกพื้นดวงไทย</span></h1>
-      <p>ดูบุคลิกจากคู่เลข ผูกลัคนาและดาวกำเนิด พร้อมสำรวจดวงจรได้ตั้งแต่หนึ่งวันถึงหลายสิบปี</p>
+      <div class="eyebrow">รู้จักตัวเองผ่านเบอร์และวันเกิด</div>
+      <h1>อ่านพลังเบอร์<br><span>เข้าใจบุคลิก</span></h1>
+      <p>ดูนิสัย จุดแข็ง จุดที่ต้องระวัง และความเข้ากันระหว่างเบอร์กับตัวตนของคุณ</p>
     </section>
 
     <nav class="app-tabs" role="tablist" aria-label="โหมดวิเคราะห์">
       <button id="tab-profile" class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="panel-profile">
-        <span>✦</span><b>เบอร์และพื้นดวง</b>
+        <span>✦</span><b>เบอร์และบุคลิก</b>
       </button>
       <button id="tab-transit" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="panel-transit">
-        <span>◷</span><b>ดวงจรเป็นช่วง</b>
+        <span>◷</span><b>ดวงตามช่วงเวลา</b>
       </button>
       <button id="tab-compare" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="panel-compare">
-        <span>⇄</span><b>เทียบบุคลิก</b>
+        <span>⇄</span><b>จับคู่บุคลิก</b>
       </button>
     </nav>
 
@@ -41,8 +41,8 @@
         <div class="form-heading">
           <div>
             <span class="step-badge">01</span>
-            <h2>ข้อมูลสำหรับวิเคราะห์</h2>
-            <p>กรอกเบอร์อย่างเดียวได้ หากเพิ่มวันเกิด ระบบจะผูกดวงไทยและคำนวณความเข้ากันของเบอร์</p>
+            <h2>เริ่มวิเคราะห์ตัวตน</h2>
+            <p>กรอกเบอร์เพื่ออ่านพลังคู่เลข และเพิ่มวันเกิดเมื่อต้องการดูว่าบุคลิกกับเบอร์เข้ากันแค่ไหน</p>
           </div>
           <button id="reset-profile" class="text-button danger" type="button">ล้างทั้งหมด</button>
         </div>
@@ -52,14 +52,19 @@
           <input id="phone" name="phone" inputmode="numeric" autocomplete="tel" maxlength="12" placeholder="เช่น 0812345678" required>
         </div>
 
-        <details class="optional-box" open>
+        <details class="optional-box birth-box" open>
           <summary>
-            <span><b>ข้อมูลเกิดสำหรับผูกดวง</b><small>วันเกิดจำเป็นเมื่อดูพื้นดวง เวลาและสถานที่ช่วยให้ลัคนาแม่นขึ้น</small></span>
-            <span class="optional-label">เพิ่มความละเอียด</span>
+            <span><b>เพิ่มวันเกิดเพื่อรู้จักตัวเองมากขึ้น</b><small>ระบบจะสรุปเป็นภาษาบุคลิก ไม่แสดงศัพท์โหราศาสตร์ที่ซับซ้อน</small></span>
+            <span class="optional-label">แนะนำ</span>
           </summary>
+          <div class="birth-benefits" aria-label="สิ่งที่จะได้รับเมื่อเพิ่มวันเกิด">
+            <span>✓ บุคลิกจากวันเกิด</span>
+            <span>✓ จุดแข็ง–จุดอ่อน</span>
+            <span>✓ คะแนนเบอร์ที่เข้ากับคุณ</span>
+          </div>
           <div class="field-grid birth-grid">
             <div class="field-block">
-              <label for="birth-date">วันเดือนปีเกิด <em>จำเป็นเมื่อผูกดวง</em></label>
+              <label for="birth-date">วันเดือนปีเกิด <em>ใช้คำนวณบุคลิก</em></label>
               <input id="birth-date" name="birthDate" type="date">
             </div>
             <div class="field-block">
@@ -73,7 +78,7 @@
             </div>
           </div>
           <details class="coordinate-box">
-            <summary>ระบุพิกัดเพื่อคำนวณลัคนาให้ละเอียดขึ้น</summary>
+            <summary>ตัวเลือกขั้นสูง: ระบุพิกัดเกิดเอง</summary>
             <div class="coordinate-grid">
               <div class="field-block">
                 <label for="birth-latitude">ละติจูด</label>
@@ -88,7 +93,7 @@
         </details>
 
         <p id="profile-error" class="form-error" role="alert"></p>
-        <button class="primary-button" type="submit">วิเคราะห์เบอร์และพื้นดวง</button>
+        <button class="primary-button" type="submit">ดูบุคลิกและความเข้ากัน</button>
         <p class="privacy-note">ใช้เวลาไทย UTC+7 · ข้อมูลไม่ถูกส่งไปจัดเก็บบนเซิร์ฟเวอร์</p>
       </form>
 
@@ -100,15 +105,15 @@
         <div id="phone-summary"></div>
         <div id="phone-personality"></div>
         <div id="phone-reading"></div>
-        <div id="natal-summary" hidden></div>
-        <div id="natal-chart" hidden></div>
-        <div id="natal-details" hidden></div>
-        <div id="natal-reading" hidden></div>
-        <div id="match-result" hidden></div>
-        <details class="pair-details">
-          <summary>ดูความหมายคู่เลขทั้งหมด</summary>
+        <details class="pair-details" open>
+          <summary><span>อ่านความหมายคู่เลขทีละคู่</span><small>ลักษณะนิสัย จุดแข็ง จุดอ่อน และวิธีใช้พลังของแต่ละคู่</small></summary>
           <div id="pair-list" class="pair-list"></div>
         </details>
+        <div id="natal-summary" hidden></div>
+        <div id="natal-reading" hidden></div>
+        <div id="match-result" hidden></div>
+        <div id="natal-details" hidden></div>
+        <div id="natal-chart" hidden></div>
       </section>
     </section>
 
@@ -173,7 +178,7 @@
           <div>
             <span class="step-badge">16</span>
             <h2>เมื่อสองบุคลิกมาเจอกัน</h2>
-            <p>ดูข้อดี จุดเสี่ยง วิธีบริหาร และเรื่องที่ต้องระวังจากบุคลิก 16 แบบ</p>
+            <p>ดูว่าแต่ละคู่คิด สื่อสาร ทำงาน และแก้ความขัดแย้งร่วมกันอย่างไร</p>
           </div>
           <button id="reset-compare" class="text-button danger" type="button">ล้างผล</button>
         </div>
@@ -198,12 +203,12 @@
 
   <footer>
     <b>พลังเบอร์</b>
-    <p>ใช้ระบบนิรายนะลาหิรีโดยประมาณ ลัคนาแบบราศีจักร ภพเรือนเท่ากัน และดาวจรเชิงสถิติ ผลลัพธ์เป็นความเชื่อและเครื่องมือสะท้อนตนเอง ไม่ใช่คำแนะนำทางวิชาชีพ</p>
+    <p>ผลลัพธ์เป็นเครื่องมือสะท้อนบุคลิกจากศาสตร์ตัวเลขและข้อมูลวันเกิดตามความเชื่อ ไม่ใช่แบบทดสอบทางจิตวิทยาหรือคำแนะนำทางวิชาชีพ</p>
   </footer>
 
   <script src="./pair-data.js?v=3"></script>
   <script src="./vendor/astronomy.browser.min.js?v=2.1.19"></script>
   <script src="./astro-thai.js?v=2"></script>
-  <script src="./app.js?v=13"></script>
+  <script src="./app.js?v=14"></script>
 </body>
 </html>
