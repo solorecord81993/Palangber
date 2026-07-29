@@ -181,7 +181,8 @@
     const phi = location.latitude * Math.PI / 180;
     const centuries = (date.getTime() / 86400000 + 2440587.5 - 2451545) / 36525;
     const epsilon = (23.439291 - 0.0130042 * centuries) * Math.PI / 180;
-    const tropical = mod(Math.atan2(-Math.cos(theta), Math.sin(theta) * Math.cos(epsilon) + Math.tan(phi) * Math.sin(epsilon)) * 180 / Math.PI);
+    const westernHorizon = mod(Math.atan2(-Math.cos(theta), Math.sin(theta) * Math.cos(epsilon) + Math.tan(phi) * Math.sin(epsilon)) * 180 / Math.PI);
+    const tropical = mod(westernHorizon + 180);
     return mod(tropical - ayanamsha(date));
   };
 
