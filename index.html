@@ -3,45 +3,48 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#fff7ed">
-  <meta name="description" content="วิเคราะห์เบอร์ บุคลิก 16 แบบ และโหราศาสตร์ไทยพื้นฐาน">
-  <title>พลังเบอร์ — เบอร์ บุคลิก และดวงไทย</title>
-  <link rel="stylesheet" href="./styles.css?v=9">
+  <meta name="theme-color" content="#fff8ef">
+  <meta name="description" content="วิเคราะห์พลังเบอร์ ผูกดวงโหราศาสตร์ไทย และดวงจรเป็นช่วงเวลา">
+  <title>พลังเบอร์ — เบอร์ พื้นดวงไทย และดวงจร</title>
+  <link rel="stylesheet" href="./styles.css?v=12">
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="./" aria-label="พลังเบอร์ หน้าแรก">
       <span class="brand-mark">๙</span>
-      <span><b>พลังเบอร์</b><small>เบอร์ · บุคลิก · ดวงไทย</small></span>
+      <span><b>พลังเบอร์</b><small>เบอร์ · พื้นดวงไทย · ดวงจร</small></span>
     </a>
     <span class="privacy-pill">ประมวลผลบนเครื่อง · ไม่บันทึกข้อมูล</span>
   </header>
 
   <main class="shell">
     <section class="hero">
-      <div class="eyebrow">เข้าใจตัวเองและคนรอบตัวแบบอ่านง่าย</div>
-      <h1>เลขบอกพลัง<br><span>ดวงบอกจังหวะ</span></h1>
-      <p>วิเคราะห์บุคลิกจากเบอร์ เชื่อมกับวันเกิด และสำรวจความสัมพันธ์ของบุคลิก 16 แบบ</p>
+      <div class="eyebrow">เครื่องมือสะท้อนตัวตนและจังหวะชีวิต</div>
+      <h1>อ่านพลังเบอร์<br><span>ผูกพื้นดวงไทย</span></h1>
+      <p>ดูบุคลิกจากคู่เลข ผูกลัคนาและดาวกำเนิด พร้อมสำรวจดวงจรได้ตั้งแต่หนึ่งวันถึงหลายสิบปี</p>
     </section>
 
     <nav class="app-tabs" role="tablist" aria-label="โหมดวิเคราะห์">
-      <button id="tab-self" class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="panel-self">
-        <span>✦</span> วิเคราะห์ตัวฉัน
+      <button id="tab-profile" class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="panel-profile">
+        <span>✦</span><b>เบอร์และพื้นดวง</b>
+      </button>
+      <button id="tab-transit" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="panel-transit">
+        <span>◷</span><b>ดวงจรเป็นช่วง</b>
       </button>
       <button id="tab-compare" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="panel-compare">
-        <span>⇄</span> เทียบ 16 บุคลิก
+        <span>⇄</span><b>เทียบบุคลิก</b>
       </button>
     </nav>
 
-    <section id="panel-self" class="tab-panel active" role="tabpanel" aria-labelledby="tab-self">
+    <section id="panel-profile" class="tab-panel active" role="tabpanel" aria-labelledby="tab-profile">
       <form id="profile-form" class="form-card">
         <div class="form-heading">
           <div>
             <span class="step-badge">01</span>
             <h2>ข้อมูลสำหรับวิเคราะห์</h2>
-            <p>กรอกเฉพาะเบอร์ก็ได้ เพิ่มวันเกิดเมื่อต้องการดูดวงไทยและความเข้ากันกับเบอร์</p>
+            <p>กรอกเบอร์อย่างเดียวได้ หากเพิ่มวันเกิด ระบบจะผูกดวงไทยและคำนวณความเข้ากันของเบอร์</p>
           </div>
-          <button id="reset-profile" class="text-button danger" type="button">ล้างข้อมูล</button>
+          <button id="reset-profile" class="text-button danger" type="button">ล้างทั้งหมด</button>
         </div>
 
         <div class="field-block primary-field">
@@ -51,12 +54,12 @@
 
         <details class="optional-box" open>
           <summary>
-            <span><b>เพิ่มข้อมูลวันเกิด</b><small>สำหรับโหราศาสตร์ไทยและคะแนน Match</small></span>
-            <span class="optional-label">ไม่บังคับ</span>
+            <span><b>ข้อมูลเกิดสำหรับผูกดวง</b><small>วันเกิดจำเป็นเมื่อดูพื้นดวง เวลาและสถานที่ช่วยให้ลัคนาแม่นขึ้น</small></span>
+            <span class="optional-label">เพิ่มความละเอียด</span>
           </summary>
-          <div class="field-grid">
+          <div class="field-grid birth-grid">
             <div class="field-block">
-              <label for="birth-date">วันเดือนปีเกิด <em>จำเป็นเมื่อดูดวง</em></label>
+              <label for="birth-date">วันเดือนปีเกิด <em>จำเป็นเมื่อผูกดวง</em></label>
               <input id="birth-date" name="birthDate" type="date">
             </div>
             <div class="field-block">
@@ -64,48 +67,101 @@
               <input id="birth-time" name="birthTime" type="time">
             </div>
             <div class="field-block full">
-              <label for="birth-place">สถานที่เกิด <span>ไม่บังคับ</span></label>
-              <input id="birth-place" name="birthPlace" type="text" maxlength="100" placeholder="เช่น กรุงเทพมหานคร">
+              <label for="birth-place">จังหวัดหรือสถานที่เกิด <span>ไม่บังคับ</span></label>
+              <input id="birth-place" name="birthPlace" type="text" maxlength="100" list="thai-place-list" placeholder="เช่น กรุงเทพมหานคร">
+              <datalist id="thai-place-list"></datalist>
             </div>
           </div>
-        </details>
-
-        <details id="transit-box" class="optional-box transit-box">
-          <summary>
-            <span><b>เลือกวันและเวลาจร</b><small>ดูพลังของวันและช่วงเวลาที่สนใจ</small></span>
-            <span class="optional-label">ใช้วันนี้เป็นค่าเริ่มต้น</span>
-          </summary>
-          <div class="field-grid">
-            <div class="field-block">
-              <label for="transit-date">วันที่ต้องการดู</label>
-              <input id="transit-date" name="transitDate" type="date">
+          <details class="coordinate-box">
+            <summary>ระบุพิกัดเพื่อคำนวณลัคนาให้ละเอียดขึ้น</summary>
+            <div class="coordinate-grid">
+              <div class="field-block">
+                <label for="birth-latitude">ละติจูด</label>
+                <input id="birth-latitude" type="number" inputmode="decimal" step="any" min="-90" max="90" placeholder="13.7563">
+              </div>
+              <div class="field-block">
+                <label for="birth-longitude">ลองจิจูด</label>
+                <input id="birth-longitude" type="number" inputmode="decimal" step="any" min="-180" max="180" placeholder="100.5018">
+              </div>
             </div>
-            <div class="field-block">
-              <label for="transit-time">เวลาที่ต้องการดู</label>
-              <input id="transit-time" name="transitTime" type="time">
-            </div>
-          </div>
+          </details>
         </details>
 
         <p id="profile-error" class="form-error" role="alert"></p>
-        <button class="primary-button" type="submit">วิเคราะห์ทั้งหมด</button>
-        <p class="privacy-note">ข้อมูลอยู่ในหน้าเว็บนี้เท่านั้น ไม่มีการส่งเบอร์หรือวันเกิดไปเก็บบนเซิร์ฟเวอร์</p>
+        <button class="primary-button" type="submit">วิเคราะห์เบอร์และพื้นดวง</button>
+        <p class="privacy-note">ใช้เวลาไทย UTC+7 · ข้อมูลไม่ถูกส่งไปจัดเก็บบนเซิร์ฟเวอร์</p>
       </form>
 
       <section id="profile-result" class="result-stack" hidden aria-live="polite">
         <div class="result-toolbar">
-          <div><span class="step-badge">02</span><h2>ผลวิเคราะห์ของคุณ</h2></div>
+          <div><span class="step-badge">02</span><h2>ผลวิเคราะห์</h2></div>
           <button id="back-to-form" class="text-button" type="button">แก้ไขข้อมูล</button>
         </div>
         <div id="phone-summary"></div>
         <div id="phone-personality"></div>
-        <div id="astro-result" hidden></div>
+        <div id="natal-summary" hidden></div>
+        <div id="natal-chart" hidden></div>
+        <div id="natal-details" hidden></div>
         <div id="match-result" hidden></div>
-        <div id="transit-result" hidden></div>
         <details class="pair-details">
           <summary>ดูความหมายคู่เลขทั้งหมด</summary>
           <div id="pair-list" class="pair-list"></div>
         </details>
+      </section>
+    </section>
+
+    <section id="panel-transit" class="tab-panel" role="tabpanel" aria-labelledby="tab-transit" hidden>
+      <form id="transit-form" class="form-card">
+        <div class="form-heading">
+          <div>
+            <span class="step-badge">◷</span>
+            <h2>ดวงจรแบบช่วงเวลา</h2>
+            <p>เลือกช่วงสั้นหรือยาวได้โดยไม่จำกัดจำนวนปี ระบบปรับจำนวนจุดคำนวณให้เหมาะกับอุปกรณ์</p>
+          </div>
+          <button id="reset-transit" class="text-button danger" type="button">ล้างช่วง</button>
+        </div>
+
+        <div id="transit-natal-status" class="status-card warning">
+          <span>ยังไม่มีพื้นดวง</span>
+          <p>กลับไปแท็บ “เบอร์และพื้นดวง” แล้วใส่วันเกิดก่อนดูดวงจร</p>
+          <button id="go-profile" class="secondary-button" type="button">ไปกรอกข้อมูลเกิด</button>
+        </div>
+
+        <div class="field-grid transit-grid">
+          <div class="field-block">
+            <label for="transit-start">วันเริ่มต้น</label>
+            <input id="transit-start" type="date" required>
+          </div>
+          <div class="field-block">
+            <label for="transit-end">วันสิ้นสุด</label>
+            <input id="transit-end" type="date" required>
+          </div>
+          <div class="field-block">
+            <label for="transit-time">เวลาที่ใช้คำนวณ</label>
+            <input id="transit-time" type="time" value="12:00" required>
+          </div>
+          <div class="field-block">
+            <label for="transit-precision">ความละเอียด</label>
+            <select id="transit-precision">
+              <option value="auto">อัตโนมัติ — แนะนำ</option>
+              <option value="day">รายวัน</option>
+              <option value="week">รายสัปดาห์</option>
+              <option value="month">รายเดือน</option>
+              <option value="quarter">รายไตรมาส</option>
+              <option value="year">รายปี</option>
+            </select>
+          </div>
+        </div>
+        <p class="range-note">ไม่มีเพดานความยาวของช่วง หากมีจุดคำนวณมากเกินไป ระบบจะเพิ่มระยะห่างอัตโนมัติเพื่อป้องกันมือถือค้าง</p>
+        <p id="transit-error" class="form-error" role="alert"></p>
+        <button id="transit-submit" class="primary-button" type="submit" disabled>วิเคราะห์ดวงจรทั้งช่วง</button>
+      </form>
+
+      <section id="transit-result" class="result-stack" hidden aria-live="polite">
+        <div id="transit-overview"></div>
+        <div id="transit-timeline"></div>
+        <div id="transit-highlights"></div>
+        <div id="transit-samples"></div>
       </section>
     </section>
 
@@ -114,10 +170,10 @@
         <div class="form-heading">
           <div>
             <span class="step-badge">16</span>
-            <h2>เมื่อบุคลิกสองแบบมาเจอกัน</h2>
-            <p>เลือกบุคลิกของคนที่หนึ่งและคนที่สอง เพื่อดูข้อดี ข้อเสีย และวิธีอยู่ร่วมกัน</p>
+            <h2>เมื่อสองบุคลิกมาเจอกัน</h2>
+            <p>ดูข้อดี จุดเสี่ยง วิธีบริหาร และเรื่องที่ต้องระวังจากบุคลิก 16 แบบ</p>
           </div>
-          <button id="reset-compare" class="text-button danger" type="button">ล้างข้อมูล</button>
+          <button id="reset-compare" class="text-button danger" type="button">ล้างผล</button>
         </div>
         <div class="people-grid">
           <div class="person-select person-a">
@@ -140,10 +196,12 @@
 
   <footer>
     <b>พลังเบอร์</b>
-    <p>ผลวิเคราะห์เป็นกรอบความเชื่อและการสะท้อนตนเอง ไม่ใช่การทดสอบบุคลิกภาพหรือคำพยากรณ์ทางวิชาชีพ</p>
+    <p>ใช้ระบบนิรายนะลาหิรีโดยประมาณ ลัคนาแบบราศีจักร ภพเรือนเท่ากัน และดาวจรเชิงสถิติ ผลลัพธ์เป็นความเชื่อและเครื่องมือสะท้อนตนเอง ไม่ใช่คำแนะนำทางวิชาชีพ</p>
   </footer>
 
   <script src="./pair-data.js?v=3"></script>
-  <script src="./app.js?v=8"></script>
+  <script src="./vendor/astronomy.browser.min.js?v=2.1.19"></script>
+  <script src="./astro-thai.js?v=1"></script>
+  <script src="./app.js?v=12"></script>
 </body>
 </html>
