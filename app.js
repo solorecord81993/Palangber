@@ -35,6 +35,65 @@
     ESFP: "เข้าถึงง่าย มีพลังกับผู้คน และชอบสร้างประสบการณ์ที่มีชีวิตชีวา"
   };
 
+  const pairDetails = {
+    "12": {
+      trait: "เป็นคนรับข้อมูลไวและมองเห็นเหตุผลได้หลายด้าน จึงไม่ชอบตัดสินอะไรแบบขาว–ดำ ภายนอกอาจดูปรับตัวง่าย แต่ภายในมักมีบทสนทนากับตัวเองหลายรอบก่อนเลือก",
+      strength: "เข้าใจความเห็นที่ต่างกัน ประนีประนอมเก่ง และเปลี่ยนมุมมองได้เมื่อพบข้อมูลใหม่ เหมาะกับเรื่องที่ต้องอ่านคนหรือพิจารณาหลายเงื่อนไข",
+      weakness: "เมื่อกังวลอาจลังเล เปลี่ยนใจ หรือขอข้อมูลเพิ่มไม่จบ ทำให้เสียจังหวะและทำให้คนรอบตัวไม่แน่ใจว่าคุณต้องการอะไร",
+      work: "ทำงานได้ดีเมื่อมีกรอบตัดสินใจและเวลาชัดเจน หากต้องตอบทันทีภายใต้แรงกดดัน ควรมีรายการเกณฑ์สำคัญไว้กันอารมณ์แกว่ง",
+      relationship: "ต้องการคนที่รับฟังโดยไม่เร่ง แต่ก็ควรบอกข้อสรุปให้ชัด ไม่ปล่อยให้อีกฝ่ายตีความจากความเงียบหรือการเปลี่ยนท่าที",
+      use: "ใช้ความสามารถในการเห็นหลายมุมกับงานวิเคราะห์ เจรจา หรือประสานงาน แล้วกำหนดเส้นตายให้ตัวเองก่อนตัดสินใจ"
+    },
+    "23": {
+      trait: "มีเสน่ห์ทางอารมณ์ เข้าถึงความรู้สึกคนอื่นไว และต้องการความสัมพันธ์ที่มีชีวิตชีวา จึงตอบสนองต่อคำพูด บรรยากาศ และการเอาใจใส่ค่อนข้างมาก",
+      strength: "สร้างความประทับใจ เก่งเรื่องศิลปะ รสนิยม และการเชื่อมความรู้สึก เหมาะกับงานหรือบทบาทที่ต้องดึงดูดความสนใจและเข้าใจผู้คน",
+      weakness: "ความคาดหวังและอารมณ์อาจขึ้นลงเร็ว เมื่อไม่มั่นใจมีโอกาสคิดแทนอีกฝ่าย หึงหวง หรือให้ความสำคัญกับความรู้สึกชั่วขณะมากกว่าข้อเท็จจริง",
+      work: "เด่นกับงานครีเอทีฟ บริการ สื่อ และการสร้างสัมพันธ์ แต่ควรแยกความชอบส่วนตัวออกจากเกณฑ์วัดผลงาน",
+      relationship: "รักแล้วทุ่มเทและต้องการการตอบสนองที่ชัด ความสัมพันธ์จะดีเมื่อพูดสถานะ ขอบเขต และความคาดหวังตรงกันตั้งแต่ต้น",
+      use: "ใช้เสน่ห์เพื่อสร้างความร่วมมือ ไม่ใช้เพื่อทดสอบความรู้สึก และพักการตัดสินใจเมื่ออารมณ์ยังแรง"
+    },
+    "34": {
+      trait: "คิดเร็ว ตอบเร็ว และมักมองเห็นจุดที่ต้องแก้ก่อนคนอื่น มีพลังผลักดันสูง ไม่ชอบความคลุมเครือหรือการทำงานที่วนอยู่กับที่",
+      strength: "เด็ดขาด กล้าชนปัญหา สื่อสารประเด็นสำคัญได้ตรง และทำงานในสถานการณ์เร่งด่วนหรือการแข่งขันได้ดี",
+      weakness: "คำพูดอาจเร็ว ตรง หรือแรงกว่าที่ตั้งใจ โดยเฉพาะเมื่อเห็นข้อผิดพลาดชัด จึงเสี่ยงให้คนอื่นรู้สึกถูกตำหนิหรือไม่กล้าเสนอความเห็น",
+      work: "เหมาะกับงานแก้ปัญหา ต่อรอง ควบคุมสถานการณ์ และงานที่ต้องการความเร็ว แต่ควรแยกคนออกจากปัญหาเวลาวิพากษ์",
+      relationship: "ต้องการความตรงไปตรงมา แต่อีกฝ่ายอาจต้องการน้ำเสียงและเวลาประมวลผลมากกว่า ควรถามก่อนว่าเขาต้องการคำตอบหรือการรับฟัง",
+      use: "เก็บความคมไว้ที่เนื้อหา ลดความแรงที่น้ำเสียง และเว้นจังหวะก่อนส่งข้อความสำคัญ"
+    },
+    "45": {
+      trait: "เป็นคนรักเหตุผล ชอบเรียนรู้ให้เข้าใจจริง และต้องการสื่อสารบนข้อมูลที่เชื่อถือได้ มักถูกมองว่าเป็นที่ปรึกษาหรือคนที่ช่วยจัดระบบความคิด",
+      strength: "วิเคราะห์ลึก อธิบายเรื่องยากให้เข้าใจง่าย มีความน่าเชื่อถือ และมองความเชื่อมโยงของข้อมูลได้ดี",
+      weakness: "อาจยึดหลักการหรือมาตรฐานสูงจนดูจริงจังเกินไป และมีแนวโน้มอธิบายมากเมื่ออีกฝ่ายต้องการเพียงข้อสรุปสั้น ๆ",
+      work: "เด่นกับงานวิเคราะห์ วางแผน สอน ให้คำปรึกษา กฎหมาย มาตรฐาน หรือบทบาทที่ต้องใช้ความรู้สร้างความไว้วางใจ",
+      relationship: "แสดงความใส่ใจผ่านคำแนะนำและการแก้ปัญหา แต่ควรจำไว้ว่าบางครั้งคนใกล้ตัวต้องการการยอมรับความรู้สึกก่อนเหตุผล",
+      use: "เปลี่ยนความรู้ให้เป็นผลงานที่ใช้ได้จริง และฝึกสรุปสารให้เหมาะกับเวลาหรือระดับความรู้ของผู้ฟัง"
+    },
+    "56": {
+      trait: "มองเห็นโอกาสและคุณค่าของทรัพยากรได้ดี ชอบความมั่นคงที่มาพร้อมคุณภาพชีวิต และมักดึงดูดคนสนับสนุนจากความเป็นมิตรกับความน่าไว้วางใจ",
+      strength: "หาโอกาสสร้างรายได้ ต่อรองผลประโยชน์ และเชื่อมความรู้กับการเติบโตได้ดี มีความสามารถทำให้เรื่องยากกลายเป็นผลลัพธ์ที่จับต้องได้",
+      weakness: "เมื่อทุกอย่างไหลลื่นอาจใช้จ่ายตามความสบาย รับภาระเกินจำเป็น หรือเชื่อว่าโอกาสใหม่จะชดเชยการวางแผนที่ไม่รัดกุม",
+      work: "เหมาะกับธุรกิจ การเงิน การขาย การบริหารทรัพยากร และงานที่ต้องสร้างความสัมพันธ์ระยะยาวกับผู้สนับสนุน",
+      relationship: "ให้ความสำคัญกับการดูแลและความมั่นคง แต่อย่าปล่อยให้เรื่องเงิน ของขวัญ หรือความสะดวกกลายเป็นตัวแทนของการพูดความรู้สึก",
+      use: "รักษาวินัยเงิน แยกเงินเติบโตออกจากเงินเพื่อความสุข และเลือกโอกาสจากคุณค่าระยะยาว"
+    },
+    "67": {
+      trait: "มีความรับผิดชอบสูง อดทน และมักรับรู้ภาระของคนรอบตัวเร็วกว่าคนอื่น จึงเผลอเป็นคนแบกทั้งเรื่องงาน เงิน และความรู้สึก",
+      strength: "รักษาคำพูด ดูแลเรื่องระยะยาว และยืนหยัดได้ในช่วงที่คนอื่นถอย เหมาะกับภารกิจที่ต้องการวินัยและความต่อเนื่อง",
+      weakness: "เสี่ยงเหนื่อยสะสม รู้สึกว่าตัวเองให้มากกว่าได้รับ หรือยอมรับภาระเพราะกลัวความสัมพันธ์มีปัญหา",
+      work: "ผู้คนไว้วางใจให้รับเรื่องยาก แต่ควรต่อรองทรัพยากร อำนาจ และเวลาให้เท่ากับความรับผิดชอบ ไม่แก้ทุกปัญหาแทนทุกคน",
+      relationship: "รักด้วยการดูแลและรับผิดชอบ จึงต้องแยกความรักออกจากการยอมทุกอย่าง และพูดเพดานเรื่องเงินหรือหน้าที่ให้ชัด",
+      use: "ตั้งขอบเขตก่อนช่วย ถามว่าเรื่องใดเป็นหน้าที่ของใคร และเก็บพลังไว้กับสิ่งที่สร้างผลระยะยาวจริง"
+    },
+    "78": {
+      trait: "มีพลังทางสังคม ใจกว้าง และมองภาพรวมของผู้คนหรือเครือข่ายได้ดี ชอบทำสิ่งที่มีอิทธิพลหรือสร้างผลต่อคนจำนวนมาก",
+      strength: "สร้างพันธมิตร เปิดประตูโอกาส และนำคนหลายแบบมาร่วมเป้าหมายเดียวกันได้ มีความกล้าและมองเกมความสัมพันธ์เป็น",
+      weakness: "อาจเชื่อคนง่ายเพราะเห็นศักยภาพ ใช้พลังกับสังคมมากเกินไป หรือรับปากหลายเรื่องจนควบคุมคุณภาพไม่ได้",
+      work: "เด่นกับงานบริหาร เครือข่าย ธุรกิจ การเจรจา และงานที่ต้องขยายผล แต่ต้องเลือกคนจากผลงานและคุณค่ามากกว่าความสนิท",
+      relationship: "ต้องการคู่ที่เข้าใจบทบาททางสังคมและให้อิสระกัน ความชัดเจนเรื่องเวลาและลำดับความสำคัญจะลดความรู้สึกถูกละเลย",
+      use: "ใช้เครือข่ายเพื่อสร้างผลลัพธ์ร่วม ไม่กระจายตัวเกินไป และตรวจความน่าเชื่อถือก่อนผูกพันผลประโยชน์"
+    }
+  };
+
   const personalityAxes = [
     {
       title: "แหล่งพลัง",
@@ -270,6 +329,36 @@
     </section>`;
   };
 
+  const pairPositionText = (position) => {
+    if (position <= 3) return "ช่วงต้น: มีผลต่อภาพลักษณ์ วิธีเริ่มต้น และการรับเรื่องใหม่";
+    if (position <= 6) return "ช่วงกลาง: มีผลต่อพฤติกรรมประจำวัน งาน และความสัมพันธ์";
+    return "คู่ท้าย: มีน้ำหนักสูงสุดต่อการตัดสินใจและพฤติกรรมที่แสดงออกชัด";
+  };
+
+  const renderPairCard = (item, analysis) => {
+    const detail = pairDetails[item.pair];
+    const occurrences = analysis.sequence.filter((row) => row.pair === item.pair);
+    const positions = occurrences.map((row) => `<li><b>${escapeHtml(row.visiblePair)}</b> · ${pairPositionText(row.position)} · น้ำหนัก ${row.weight}%</li>`).join("");
+    return `<article class="pair-card polarity-${item.polarity}">
+      <div class="pair-top"><span>${escapeHtml(item.visiblePair)}</span><small>น้ำหนักรวม ${item.weight}%${item.count > 1 ? ` · พบ ${item.count} ครั้ง` : ""}</small></div>
+      <h3>${escapeHtml(item.title)}</h3>
+      <p class="pair-lead">${escapeHtml(item.summary)}</p>
+      ${detail ? `<div class="pair-insight-grid">
+        <section><span>ลักษณะนิสัย</span><p>${escapeHtml(detail.trait)}</p></section>
+        <section class="strength"><span>จุดแข็ง</span><p>${escapeHtml(detail.strength)}</p></section>
+        <section class="weakness"><span>จุดที่ต้องระวัง</span><p>${escapeHtml(detail.weakness)}</p></section>
+        <section><span>การงาน</span><p>${escapeHtml(detail.work)}</p></section>
+        <section><span>ความสัมพันธ์</span><p>${escapeHtml(detail.relationship)}</p></section>
+        <section class="best-use"><span>ใช้พลังคู่นี้ให้ดีที่สุด</span><p>${escapeHtml(detail.use)}</p></section>
+      </div>` : ""}
+      <details class="pair-position-details">
+        <summary>เหตุใดตำแหน่งของคู่นี้จึงสำคัญ</summary>
+        <ul>${positions}</ul>
+      </details>
+      <p class="pair-advice"><b>คำแนะนำเฉพาะคู่:</b> ${escapeHtml(item.advice)}</p>
+    </article>`;
+  };
+
   const renderPhone = (analysis) => {
     const verdict = analysis.score >= 75 ? "พลังโดยรวมโดดเด่น" : analysis.score >= 60 ? "ภาพรวมค่อนข้างดี" : analysis.score >= 45 ? "พลังผสม ต้องบริหารให้ดี" : "ควรเลือกใช้อย่างมีสติ";
     $("#phone-summary").innerHTML = `<section class="summary-card">
@@ -284,11 +373,9 @@
       <div class="axis-grid">${profile.axes.map(renderAxisCard).join("")}</div>
       <p class="method-note">เป็นการเทียบกรอบ 4 มิติจากธีมคู่เลข ไม่ใช่ผลทดสอบ MBTI ทางจิตวิทยา</p>
     </section>`;
-    $("#pair-list").innerHTML = analysis.items.map((item) => `<article class="pair-card polarity-${item.polarity}">
-      <div class="pair-top"><span>${escapeHtml(item.visiblePair)}</span><small>น้ำหนัก ${item.weight}%${item.count > 1 ? ` · พบ ${item.count} ครั้ง` : ""}</small></div>
-      <h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p>
-      <p class="pair-advice"><b>คำแนะนำ:</b> ${escapeHtml(item.advice)}</p>
-    </article>`).join("");
+    $("#pair-list").innerHTML = analysis.items.length
+      ? analysis.items.map((item) => renderPairCard(item, analysis)).join("")
+      : `<div class="empty-reading">ยังไม่มีคำอธิบายคู่เลขที่ตรงกับฐานข้อมูลชุดนี้</div>`;
     renderPhoneReading(analysis);
   };
 
@@ -441,92 +528,100 @@
     ];
   };
 
+  const natalAxesForDisplay = (natal) => natal.personality.axes.map((result, index) => {
+    const definition = personalityAxes[index];
+    const dominant = result.code === definition.left.code ? definition.left : definition.right;
+    return {
+      ...definition,
+      leftPercent: result.leftPercent,
+      dominant,
+      dominantPercent: result.code === definition.left.code ? result.leftPercent : 100 - result.leftPercent
+    };
+  });
+
+  const birthPersonalityAreas = (natal, domains) => {
+    const code = natal.personality.code;
+    const is = (letter) => code.includes(letter);
+    return [
+      {
+        icon: "คิด", title: "วิธีคิดและตัดสินใจ", score: domains[0].score,
+        text: `${is("N") ? "คุณเริ่มจากภาพรวม ความเป็นไปได้ และความหมายที่ซ่อนอยู่" : "คุณเริ่มจากข้อเท็จจริง ประสบการณ์ และสิ่งที่ตรวจสอบได้"} ก่อนจะ${is("T") ? "ใช้เหตุผลกับเกณฑ์ที่ชัดเพื่อหาข้อสรุป" : "พิจารณาคุณค่า ความรู้สึก และผลกระทบต่อผู้เกี่ยวข้อง"}`,
+        advice: is("T") ? "ก่อนสรุปเรื่องคน ให้ถามความรู้สึกและความต้องการเพิ่มจากข้อมูลที่มี" : "เมื่อเรื่องมีความเสี่ยงสูง ให้เขียนข้อเท็จจริงและเกณฑ์ตัดสินใจแยกจากความรู้สึก"
+      },
+      {
+        icon: "งาน", title: "รูปแบบการทำงาน", score: domains[1].score,
+        text: `${is("J") ? "ทำงานได้ดีที่สุดเมื่อเป้าหมาย บทบาท และกำหนดเวลาชัด" : "ทำงานได้ดีเมื่อมีพื้นที่ทดลองและปรับวิธีระหว่างทาง"} คุณ${is("I") ? "มักคิดให้ตกผลึกก่อนแสดงความเห็น" : "มักได้พลังจากการคุยและขยับงานร่วมกับคนอื่น"}`,
+        advice: is("J") ? "เผื่อพื้นที่ให้แผนเปลี่ยนได้ โดยยึดผลลัพธ์มากกว่าวิธีเดิม" : "กำหนดจุดตรวจงานและเส้นตายย่อยเพื่อให้ไอเดียไปถึงผลลัพธ์"
+      },
+      {
+        icon: "รัก", title: "ความสัมพันธ์และการสื่อสาร", score: domains[3].score,
+        text: `${is("I") ? "ต้องการเวลาส่วนตัวเพื่อจัดการความรู้สึก" : "มักเข้าใจความรู้สึกตัวเองผ่านการพูดคุย"} และ${is("F") ? "ให้คุณค่ากับน้ำเสียง ความจริงใจ และความรู้สึกปลอดภัย" : "ให้คุณค่ากับความชัดเจน ความสมเหตุผล และการแก้ปัญหาได้จริง"}`,
+        advice: "บอกให้อีกฝ่ายรู้ว่าขณะนั้นต้องการคำแนะนำ การรับฟัง หรือเวลาส่วนตัว เพื่อลดการตีความแทนกัน"
+      },
+      {
+        icon: "ใจ", title: "เมื่ออยู่ภายใต้แรงกดดัน", score: domains[4].score,
+        text: `${is("J") ? "มีแนวโน้มพยายามควบคุมสถานการณ์และรีบทำให้เรื่องกลับมาเป็นระบบ" : "มีแนวโน้มเปิดทางเลือกไว้หลายทางและเลื่อนข้อสรุปจนกว่าจะมั่นใจ"} ภายนอกอาจยังทำหน้าที่ต่อได้แม้ภายในใช้พลังมาก`,
+        advice: "แยกสิ่งที่ควบคุมได้ออกจากสิ่งที่ต้องรอ กำหนดเวลาหยุดคิด และขอความช่วยเหลือก่อนความเหนื่อยสะสม"
+      }
+    ];
+  };
+
   const renderNatalReading = (natal) => {
     const domains = buildNatalDomains(natal);
-    const fallen = natal.positions.filter((planet) => planet.dignity === "นิจ");
-    const strong = natal.positions.filter((planet) => ["อุจจ์", "เกษตร"].includes(planet.dignity));
-    const kalakini = natal.thaksa.find((item) => item.role === "กาลกิณี");
-    const houses = natal.houses.map((house) => {
-      const planets = house.planets;
-      return `<article class="house-reading">
-        <header><span>${house.number}</span><div><h3>${house.name}</h3><small>${house.meaning}</small></div></header>
-        <p>${planets.length
-          ? `มีดาว ${planets.map((planet) => `${planet.thai}${planet.dignity !== "ปกติ" ? `(${planet.dignity})` : ""}`).join(", ")} ทำให้เรื่องของภพนี้แสดงออกผ่าน${planets.map((planet) => planetRoles[planet.key]).join(" และ ")}`
-          : "ไม่มีดาวสถิตโดยตรง ไม่ได้แปลว่าเรื่องนี้ไม่มีความสำคัญ แต่ผลจะเปิดชัดเมื่อเจ้าเรือนหรือดาวจรเข้ามากระตุ้น"}</p>
-      </article>`;
-    }).join("");
-    $("#natal-reading").innerHTML = `<section class="content-card deep-reading-card">
-      <div class="section-title"><div><span class="result-kicker">บทอ่านพื้นดวง</span><h2>คำทำนายดวงแบบละเอียด</h2>
-      <p>สังเคราะห์ลัคนา ดาวกำเนิด ภพ นวางค์ มาตรฐานดาว และมหาทักษา</p></div></div>
-      <div class="reading-intro">
-        <p><b>แกนชีวิต:</b> ลัคนา${Astro.signs[natal.ascSign].name}ทำให้${ascendantReadings[Astro.signs[natal.ascSign].name]}</p>
-        <p><b>ดาวที่ช่วยส่งกำลัง:</b> ${strong.length ? strong.map((planet) => `${planet.thai} ${planet.dignity}`).join(" · ") : "ไม่มีดาวอุจจ์หรือเกษตรเด่น ต้องใช้การบริหารดาวร่วมกัน"}.</p>
-        <p><b>บทเรียนสำคัญ:</b> ${fallen.length ? `${fallen.map((planet) => `${planet.thai}นิจ`).join(" · ")} ต้องพัฒนาผ่านวินัยและประสบการณ์` : "ไม่พบดาวนิจในกลุ่มหลัก"} · กาลกิณีมหาทักษาคือ ${kalakini?.planet || "ไม่ระบุ"} จึงควรระวังการใช้พลังของดาวนี้แบบสุดโต่ง.</p>
+    const areas = birthPersonalityAreas(natal, domains);
+    const ranked = [...domains].sort((a, b) => b.score - a.score);
+    const strengths = ranked.slice(0, 3);
+    const growth = ranked.slice(-2).reverse();
+    const ascName = Astro.signs[natal.ascSign].name;
+    $("#natal-reading").innerHTML = `<section class="content-card deep-reading-card birth-reading-card">
+      <div class="section-title"><div><span class="result-kicker">บุคลิกจากวันเกิด</span><h2>ตัวตน จุดแข็ง และจุดที่ต้องพัฒนา</h2>
+      <p>แปลข้อมูลวันเกิดเป็นภาษาพฤติกรรมที่นำไปใช้ได้ง่าย</p></div></div>
+      <div class="reading-intro birth-intro">
+        <p><b>ภาพรวมตัวตน:</b> ${escapeHtml(typeDescriptions[natal.personality.code])}</p>
+        <p><b>วิธีแสดงออก:</b> ${escapeHtml(ascendantReadings[ascName])}</p>
       </div>
-      <div class="domain-reading-grid natal-domain-grid">${domains.map((domain) => `<article class="domain-reading">
-        <div class="domain-head"><span>${domain.icon}</span><div><h3>${domain.title}</h3><small>${domain.score >= 70 ? "แรงส่งดี" : domain.score >= 52 ? "ต้องบริหารสมดุล" : "เป็นบทเรียนสำคัญ"}</small></div><b>${domain.score}</b></div>
-        <div class="domain-bar"><i style="width:${domain.score}%"></i></div><p>${domain.text}</p>
-        <p class="domain-evidence"><b>หลักฐานในดวง:</b> ${domain.evidence}</p>
-        <p class="domain-advice"><b>แนวทาง:</b> ${domain.advice}</p>
+      <div class="axis-grid birth-axis-grid">${natalAxesForDisplay(natal).map(renderAxisCard).join("")}</div>
+      <div class="strength-weakness-grid">
+        <section class="personality-list strength-list"><span>จุดแข็งที่ใช้ได้ดี</span>
+          <ul>${strengths.map((domain) => `<li><b>${domain.title}</b><small>${domain.advice}</small></li>`).join("")}</ul>
+        </section>
+        <section class="personality-list weakness-list"><span>จุดอ่อนที่ควรรู้ทัน</span>
+          <ul>${growth.map((domain) => `<li><b>${domain.title}</b><small>${domain.advice}</small></li>`).join("")}</ul>
+        </section>
+      </div>
+      <div class="personality-area-grid">${areas.map((area) => `<article class="personality-area">
+        <header><span>${area.icon}</span><div><h3>${area.title}</h3><small>${area.score >= 68 ? "เป็นธรรมชาติและใช้ได้คล่อง" : area.score >= 50 ? "ทำได้ดีเมื่อมีสติ" : "ต้องใช้เวลาและการฝึก"}</small></div></header>
+        <p>${area.text}</p><p class="area-advice"><b>วิธีบริหาร:</b> ${area.advice}</p>
       </article>`).join("")}</div>
-      <details class="house-reading-details">
-        <summary>อ่านคำทำนายครบทั้ง 12 ภพ</summary>
-        <div class="house-reading-grid">${houses}</div>
-      </details>
     </section>`;
     $("#natal-reading").hidden = false;
   };
 
   const renderNatal = (natal) => {
     const moon = natal.positions.find((planet) => planet.key === "Moon");
-    const story = natalNarrative(natal);
-    $("#natal-summary").innerHTML = `<section class="natal-hero">
-      <div class="natal-head"><div><small>พื้นดวงโหราศาสตร์ไทย · นิรายนะ</small>
-      <h2>ลัคนาราศี${Astro.signs[natal.ascSign].name}</h2>
-      <p>${formatThaiDate(natal.date, { dateStyle: "long" })} · ${escapeHtml(natal.timeText)} · ${escapeHtml(natal.location.label)}</p></div>
-      <div class="asc-badge"><span>องศาลัคนา</span><strong>${Astro.formatDegree(natal.ascDegree)}</strong></div></div>
-      <div class="natal-facts">
+    const ascName = Astro.signs[natal.ascSign].name;
+    $("#natal-summary").innerHTML = `<section class="birth-summary-card">
+      <div class="birth-type-badge"><small>บุคลิกจากวันเกิด</small><strong>${natal.personality.code}</strong></div>
+      <div><span class="result-kicker">ข้อมูลวันเกิดช่วยเห็นตัวตนภายใน</span>
+        <h2>${escapeHtml(typeNames[natal.personality.code])}</h2>
+        <p>${escapeHtml(typeDescriptions[natal.personality.code])}</p>
+        <div class="birth-meta"><span>${formatThaiDate(natal.date, { dateStyle: "long" })}</span><span>${escapeHtml(natal.timeText)}</span><span>${escapeHtml(natal.location.label)}</span></div>
+      </div>
+    </section>`;
+    $("#natal-chart").innerHTML = "";
+    $("#natal-details").innerHTML = `<details class="technical-details">
+      <summary><span><b>ข้อมูลพื้นดวงที่ระบบใช้คำนวณ</b><small>ส่วนนี้มีไว้ตรวจสอบ ไม่จำเป็นต้องอ่านเพื่อเข้าใจผลบุคลิก</small></span></summary>
+      <div class="technical-facts">
+        <div><span>ลัคนา</span><b>${ascName} ${Astro.formatDegree(natal.ascDegree)}</b></div>
         <div><span>ดาวประจำวัน</span><b>${natal.weekdayPlanet.symbol} ${natal.weekdayPlanet.thai}</b></div>
-        <div><span>ฤกษ์กำเนิด</span><b>${natal.nakshatra} บาท ${natal.nakshatraPada}</b></div>
-        <div><span>จันทร์สถิตราศี</span><b>${moon.signName} ${Astro.formatDegree(moon.degree)}</b></div>
-        <div><span>บุคลิกจากพื้นดวง</span><b>${natal.personality.code} · ${typeNames[natal.personality.code]}</b></div>
+        <div><span>จันทร์</span><b>${moon.signName} ${Astro.formatDegree(moon.degree)}</b></div>
+        <div><span>ตำแหน่งเกิด</span><b>${escapeHtml(natal.location.quality)}</b></div>
       </div>
-    </section>`;
-    $("#natal-chart").innerHTML = `<section class="content-card chart-card">
-      <div class="section-title"><div><h2>ผังราศีจักร 12 ภพ</h2><p>เลขดาวอยู่ในภพที่คำนวณจากลัคนา</p></div></div>
-      ${renderWheel(natal)}
-      <div class="highlight-grid">
-        <div class="highlight-box good"><h3>จุดแข็งพื้นดวง</h3><p>${escapeHtml(story.strengths)}</p><p>${escapeHtml(story.career)}</p></div>
-        <div class="highlight-box watch"><h3>จุดที่ต้องบริหาร</h3><p>${escapeHtml(story.watch)}</p><p>${escapeHtml(story.relationship)}</p></div>
-      </div>
-      <p class="method-note">พิกัด: ${natal.location.latitude.toFixed(4)}, ${natal.location.longitude.toFixed(4)} (${escapeHtml(natal.location.quality)}) · อายนางศะลาหิรีประมาณ ${natal.ayanamsha.toFixed(3)}°</p>
-    </section>`;
-
-    const planetRows = natal.positions.map((planet) => `<tr>
-      <td>${planet.symbol} ${planet.number} ${planet.thai}${planet.retrograde ? " R" : ""}</td>
-      <td>${planet.signName} ${Astro.formatDegree(planet.degree)}</td><td>ภพ ${planet.house} ${Astro.houseNames[planet.house - 1][0]}</td>
-      <td>${planet.navamsaName}</td><td><span class="dignity ${planet.dignity}">${planet.dignity}</span></td>
-    </tr>`).join("");
-    const thaksa = natal.thaksa.map((item) => `<div class="thaksa-item ${item.role === "กาลกิณี" ? "bad" : ""}"><span>${item.role}</span><b>${item.number} · ${item.planet}</b></div>`).join("");
-    const aspects = natal.aspects.length
-      ? natal.aspects.slice(0, 28).map((aspect) => `<div class="aspect-item">${escapeHtml(aspect.text)}</div>`).join("")
-      : `<div class="aspect-item">ไม่พบโยคเกณฑ์ดาวไทยแบบราศีสัมพันธ์ในตำแหน่งหลัก</div>`;
-    $("#natal-details").innerHTML = `<section class="content-card chart-card">
-      <div class="section-title"><div><h2>รายละเอียดพื้นดวง</h2><p>ตำแหน่งดาว นวางค์ มหาทักษา และโยคเกณฑ์</p></div></div>
-      <div class="detail-tabs" role="tablist" aria-label="รายละเอียดพื้นดวง">
-        <button class="detail-chip active" type="button" data-detail="planets">ตำแหน่งดาว</button>
-        <button class="detail-chip" type="button" data-detail="thaksa">มหาทักษา</button>
-        <button class="detail-chip" type="button" data-detail="aspects">โยคเกณฑ์</button>
-      </div>
-      <div class="detail-panel" data-panel="planets"><div class="table-wrap"><table class="planet-table">
-        <thead><tr><th>ดาว</th><th>ราศีและองศา</th><th>ภพ</th><th>นวางค์</th><th>มาตรฐานดาว</th></tr></thead><tbody>${planetRows}</tbody>
-      </table></div></div>
-      <div class="detail-panel" data-panel="thaksa" hidden><div class="thaksa-grid">${thaksa}</div></div>
-      <div class="detail-panel" data-panel="aspects" hidden><div class="aspect-list">${aspects}</div></div>
-      <p class="method-note">“เต็มรูปแบบ” ในเว็บนี้หมายถึงชุดคำนวณราศีจักรหลัก ไม่รวมทักษาจรเฉพาะสำนัก ฤกษ์พิธี หรือลายมือโหรที่ต้องใช้ดุลยพินิจ</p>
-    </section>`;
+      <p class="method-note">คำนวณด้วยระบบนิรายนะลาหิรีและลัคนาแบบราศีจักร แต่การแสดงผลหลักเน้นบุคลิก จุดแข็ง จุดอ่อน และความเข้ากัน</p>
+    </details>`;
     renderNatalReading(natal);
-    ["#natal-summary", "#natal-chart", "#natal-details", "#natal-reading"].forEach((selector) => $(selector).hidden = false);
+    ["#natal-summary", "#natal-details", "#natal-reading"].forEach((selector) => $(selector).hidden = false);
+    $("#natal-chart").hidden = true;
   };
 
   const chartAxisForMatch = (natal, index) => ({
@@ -564,11 +659,14 @@
     const strongest = [...rows].sort((a, b) => b.similarity - a.similarity)[0];
     const mostDifferent = [...rows].sort((a, b) => a.similarity - b.similarity)[0];
     $("#match-result").innerHTML = `<section class="content-card match-card">
-      <div class="match-score"><span>เบอร์ Match กับพื้นดวง</span><strong>${score}%</strong><b>${label}</b></div>
+      <div class="section-title match-title"><div><span class="result-kicker">ความเข้ากันของเบอร์กับตัวคุณ</span><h2>เบอร์นี้เป็นตัวคุณแค่ไหน?</h2>
+      <p>เปรียบเทียบบุคลิกจากเบอร์ ${phoneProfile.code} กับบุคลิกจากวันเกิด ${natal.personality.code}</p></div></div>
+      <div class="identity-match-row"><div><small>บุคลิกจากเบอร์</small><b>${phoneProfile.code}</b><span>${escapeHtml(typeNames[phoneProfile.code])}</span></div><i>⇄</i><div><small>ตัวตนจากวันเกิด</small><b>${natal.personality.code}</b><span>${escapeHtml(typeNames[natal.personality.code])}</span></div></div>
+      <div class="match-score"><span>คะแนนความสอดคล้อง</span><strong>${score}%</strong><b>${label}</b></div>
       <div class="match-grid">${rows.map((row) => `<div class="match-row"><span>${escapeHtml(row.title)}</span><b class="${row.same ? "same" : "different"}">${row.phone} ${row.same ? "=" : "↔"} ${row.natal}</b></div>`).join("")}</div>
-      <p>${score >= 72 ? "เบอร์ขยายบุคลิกที่มีอยู่เดิมได้ค่อนข้างเป็นธรรมชาติ" : "เบอร์กระตุ้นให้แสดงพฤติกรรมบางด้านต่างจากพื้นดวง จึงอาจช่วยพัฒนาได้แต่ต้องสังเกตความฝืนของตน"}</p>
+      <p class="match-summary">${score >= 72 ? "เมื่อใช้เบอร์นี้ บุคลิกที่แสดงออกจะใกล้กับตัวตนภายใน จึงสื่อสารและตัดสินใจได้ค่อนข้างเป็นธรรมชาติ" : "เบอร์นี้ผลักให้คุณแสดงบางด้านต่างจากนิสัยเดิม จึงช่วยเติมสิ่งที่ขาดได้ แต่ในวันที่เหนื่อยอาจรู้สึกว่าต้องฝืนตัวเอง"}</p>
       <div class="match-reading">
-        <h3>คำอธิบายความเข้ากันแบบรายด้าน</h3>
+        <h3>เข้ากันอย่างไรในแต่ละด้าน</h3>
         ${rows.map((row) => `<article><header><b>${row.title}</b><span>${Math.round(row.similarity)}% สอดคล้อง</span></header>
           <p>${row.explanation}</p><small><b>วิธีบริหาร:</b> ${row.advice}</small></article>`).join("")}
         <div class="match-conclusion">
@@ -585,7 +683,7 @@
     const submit = $("#transit-submit");
     if (!currentNatal) {
       status.className = "status-card warning";
-      status.innerHTML = `<span>ยังไม่มีพื้นดวง</span><p>กลับไปแท็บ “เบอร์และพื้นดวง” แล้วใส่วันเกิดก่อนดูดวงจร</p><button id="go-profile" class="secondary-button" type="button">ไปกรอกข้อมูลเกิด</button>`;
+      status.innerHTML = `<span>ยังไม่มีข้อมูลวันเกิด</span><p>กลับไปแท็บ “เบอร์และบุคลิก” แล้วใส่วันเกิดก่อนดูดวงตามช่วงเวลา</p><button id="go-profile" class="secondary-button" type="button">ไปกรอกวันเกิด</button>`;
       submit.disabled = true;
       $("#go-profile").addEventListener("click", () => switchTab("profile"));
     } else {
@@ -731,12 +829,26 @@
   const renderComparison = (typeA, typeB) => {
     const result = compareTypes(typeA, typeB);
     const list = (items) => items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+    const axisNames = ["พลังและพื้นที่ส่วนตัว", "วิธีมองข้อมูล", "วิธีตัดสินใจ", "แผนและความยืดหยุ่น"];
+    const axisCards = relationshipAxisText.map((text, index) => {
+      const same = typeA[index] === typeB[index];
+      return `<article class="relationship-axis-card">
+        <header><span>${typeA[index]} ${same ? "=" : "↔"} ${typeB[index]}</span><b>${axisNames[index]}</b></header>
+        <p><strong>ข้อดี:</strong> ${same ? text.same : text.different}</p>
+        <p><strong>จุดเสี่ยง:</strong> ${same ? text.riskSame : text.riskDifferent}</p>
+        <p class="axis-manage"><strong>ข้อตกลงที่ช่วยได้:</strong> ${text.manage}</p>
+      </article>`;
+    }).join("");
     $("#compare-result").innerHTML = `<section class="relationship-hero">
       <div><span>A</span><b>${typeA}</b><small>${escapeHtml(typeNames[typeA])}</small></div>
       <div class="relationship-score"><strong>${result.score}%</strong><span>${result.label}</span></div>
       <div><span>B</span><b>${typeB}</b><small>${escapeHtml(typeNames[typeB])}</small></div>
     </section>
     <section class="relationship-intro"><p><b>${typeA}</b> ${escapeHtml(typeDescriptions[typeA])}</p><p><b>${typeB}</b> ${escapeHtml(typeDescriptions[typeB])}</p></section>
+    <section class="content-card relationship-detail-card">
+      <div class="section-title"><div><span class="result-kicker">อ่านทีละมิติ</span><h2>สองบุคลิกนี้จะเจอกันอย่างไร</h2><p>อธิบายทั้งแรงส่ง จุดสะดุด และข้อตกลงที่ควรมี</p></div></div>
+      <div class="relationship-axis-grid">${axisCards}</div>
+    </section>
     <div class="relationship-grid">
       <section class="relationship-box good"><h3>ข้อดีเมื่อมาเจอกัน</h3><ul>${list(result.advantages)}</ul></section>
       <section class="relationship-box risk"><h3>ข้อเสียและจุดเสี่ยง</h3><ul>${list(result.risks)}</ul></section>
@@ -799,7 +911,7 @@
         renderMatch(phoneAnalysis.profile, currentNatal);
       } catch (error) {
         currentNatal = null;
-        $("#profile-error").textContent = `คำนวณพื้นดวงไม่ได้: ${error?.message || error}`;
+        $("#profile-error").textContent = `วิเคราะห์ข้อมูลวันเกิดไม่ได้: ${error?.message || error}`;
       }
     } else {
       currentNatal = null;
@@ -813,7 +925,7 @@
   $("#transit-form").addEventListener("submit", (event) => {
     event.preventDefault();
     if (!currentNatal) {
-      $("#transit-error").textContent = "กรุณาผูกพื้นดวงจากวันเกิดก่อน";
+      $("#transit-error").textContent = "กรุณาเพิ่มข้อมูลวันเกิดในแท็บเบอร์และบุคลิกก่อน";
       return;
     }
     const startText = $("#transit-start").value;
