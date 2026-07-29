@@ -104,6 +104,7 @@
     const digits = phone.slice(-8);
     const grouped = new Map();
     const themes = new Map();
+    const sequence = [];
     let weightedScore = 0;
     let totalWeight = 0;
     for (let index = 0; index < 7; index += 1) {
@@ -111,6 +112,7 @@
       const meaning = byPair.get(normalizePair(visiblePair));
       if (!meaning) continue;
       const weight = pairWeights[index];
+      sequence.push({ ...meaning, visiblePair, weight, position: index + 1 });
       weightedScore += meaning.score * weight;
       totalWeight += weight;
       const existing = grouped.get(meaning.pair);
@@ -126,7 +128,7 @@
     const score = clamp(Math.round((raw + 100) / 2), 0, 100);
     const items = [...grouped.values()].sort((a, b) => b.weight - a.weight);
     const topThemes = [...themes.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([theme]) => theme);
-    return { score, items, topThemes, profile: buildPhonePersonality(items) };
+    return { score, items, sequence, topThemes, profile: buildPhonePersonality(items) };
   };
 
   const calculatePhoneAxis = (items, axis) => {
@@ -160,6 +162,114 @@
     </article>`;
   };
 
+  const phoneDomains = [
+    {
+      key: "character", title: "นิสัยและวิธีคิด", icon: "◉",
+      themes: ["ผู้นำ", "ปัญญา", "สติ", "ความคิดสร้างสรรค์", "การตัดสินใจ", "อารมณ์", "สัญชาตญาณ", "ความรับผิดชอบ"],
+      good: "เบอร์ส่งเสริมให้คิดเป็นระบบ รู้จังหวะตัดสินใจ และแสดงจุดยืนได้ชัด เมื่อมีเป้าหมายจะเรียนรู้เร็วและพาตัวเองออกจากปัญหาได้ดี",
+      mixed: "นิสัยที่แสดงผ่านเบอร์มีทั้งความเด็ดขาดและความลังเลสลับกัน บางช่วงคิดไวมาก แต่เมื่อข้อมูลหรือความรู้สึกขัดกันอาจใช้เวลาตัดสินใจนาน",
+      watch: "พลังเลขทำให้รับแรงกดดันทางความคิดง่าย มีโอกาสคิดซ้ำ ยึดความคิดเดิม หรือรีบตัดสินใจเมื่ออารมณ์ขึ้น",
+      advice: "กำหนดเกณฑ์ตัดสินใจไว้ล่วงหน้า และเว้นจังหวะก่อนตอบเรื่องสำคัญ"
+    },
+    {
+      key: "work", title: "การงานและบทบาท", icon: "▣",
+      themes: ["การงาน", "ธุรกิจ", "ผู้ใหญ่สนับสนุน", "ชื่อเสียง", "การแข่งขัน", "การวางแผน", "การสื่อสาร", "เทคโนโลยี", "ผู้นำ"],
+      good: "เหมาะกับงานที่ต้องรับผิดชอบ ตัดสินใจ ประสานงาน หรือใช้ความรู้เฉพาะทาง มีแนวโน้มสร้างความน่าเชื่อถือจากผลงานและได้รับโอกาสจากผู้ใหญ่หรือเครือข่าย",
+      mixed: "งานเติบโตได้จากความสามารถจริง แต่จะมีจังหวะที่ต้องรับหลายเรื่องพร้อมกันหรือเข้าไปแก้ปัญหาแทนคนอื่น ความก้าวหน้าจึงขึ้นกับการเลือกงานให้ตรงบทบาท",
+      watch: "เสี่ยงแบกภาระเกินขอบเขต ขัดแย้งจากคำพูดตรง หรือเปลี่ยนทิศทางงานเร็วเมื่อรู้สึกว่างานไม่เดิน",
+      advice: "จัดลำดับงานที่สร้างผลลัพธ์สูงและตกลงขอบเขตความรับผิดชอบให้ชัด"
+    },
+    {
+      key: "money", title: "การเงินและทรัพย์สิน", icon: "฿",
+      themes: ["การเงิน", "โอกาส", "ความมั่นคง", "ธุรกิจ", "ความรับผิดชอบ", "ความสุข", "โชคลาภ"],
+      good: "มีพลังหาเงินจากความรู้ โอกาสใหม่ หรือการทำงานร่วมกับคนอื่น หากรักษาวินัยจะต่อยอดรายได้และสะสมทรัพย์ได้ดี",
+      mixed: "หาโอกาสทางการเงินได้ แต่เงินอาจหมุนออกตามภาระ ความสบาย หรือการช่วยคนใกล้ตัว จึงต้องแยกเงินเติบโตออกจากเงินใช้จ่าย",
+      watch: "ควรระวังการตัดสินใจทางเงินตามอารมณ์ การรับภาระของคนอื่น หรือคาดหวังผลตอบแทนเร็วเกินไป",
+      advice: "แบ่งเงินเป็นก้อนสำรอง ก้อนลงทุน และก้อนใช้จ่าย พร้อมกำหนดเพดานช่วยเหลือผู้อื่น"
+    },
+    {
+      key: "love", title: "ความรักและความสัมพันธ์", icon: "♡",
+      themes: ["ความรัก", "ความสัมพันธ์", "เสน่ห์", "อารมณ์", "ครอบครัว", "ผู้ใหญ่สนับสนุน"],
+      good: "มีเสน่ห์จากความจริงใจและความใส่ใจ เมื่อมั่นใจในความสัมพันธ์จะดูแลคนรักและพร้อมสร้างความมั่นคงร่วมกัน",
+      mixed: "ต้องการทั้งความใกล้ชิดและพื้นที่ส่วนตัว จึงอาจดูนิ่งในช่วงที่กำลังคิด แต่คาดหวังให้อีกฝ่ายเข้าใจความรู้สึกอยู่ลึก ๆ",
+      watch: "มีโอกาสเก็บความไม่พอใจ คาดหวังสูง หรือใช้อารมณ์ตัดสินความสัมพันธ์เมื่อรู้สึกไม่มั่นคง",
+      advice: "พูดความต้องการและขอบเขตตรง ๆ โดยไม่ให้อีกฝ่ายต้องเดาความรู้สึก"
+    },
+    {
+      key: "communication", title: "การสื่อสารและสังคม", icon: "✦",
+      themes: ["การสื่อสาร", "เครือข่าย", "เสน่ห์", "ผู้นำ", "ปัญญา", "ชื่อเสียง", "ความขัดแย้ง"],
+      good: "อธิบายเรื่องยากให้เข้าใจง่าย สร้างความน่าเชื่อถือ และเชื่อมคนหรือข้อมูลหลายฝ่ายเข้าหากันได้ดี",
+      mixed: "สื่อสารได้ดีเมื่อมีข้อมูลพร้อม แต่ในเรื่องละเอียดอ่อนอาจพูดสั้นเกินไปหรือใช้เหตุผลมากกว่าความรู้สึก",
+      watch: "คำพูดตรง เร็ว หรือแรงในช่วงกดดันอาจทำให้คนอื่นตีความว่าตำหนิหรือควบคุม",
+      advice: "แยกข้อเท็จจริง ความเห็น และความต้องการออกจากกันก่อนพูด"
+    },
+    {
+      key: "pressure", title: "พลังใจและแรงกดดัน", icon: "◇",
+      themes: ["ความเครียด", "สติ", "อารมณ์", "ความลับ", "ความรับผิดชอบ", "การเปลี่ยนแปลง"],
+      good: "รับมือสถานการณ์ยากได้ดีเมื่อมีเป้าหมายชัด และมักกลับมาตั้งหลักได้จากการวางแผนหรือทบทวนคนเดียว",
+      mixed: "ภายนอกดูควบคุมสถานการณ์ได้ แต่ภายในอาจคิดหลายชั้นและใช้พลังมากกว่าที่คนอื่นเห็น",
+      watch: "มีแนวโน้มแบกความรับผิดชอบ คิดวน หรือพักไม่เต็มที่เมื่อเรื่องยังไม่จบ",
+      advice: "กำหนดเวลาหยุดคิดเรื่องงานและระบายภาระเป็นรายการที่จัดการได้ทีละข้อ"
+    }
+  ];
+
+  const analyzePhoneDomain = (analysis, domain) => {
+    const matches = analysis.sequence.filter((item) => item.themes.split(",").some((theme) => domain.themes.includes(theme)));
+    const evidence = matches.length ? matches : analysis.sequence;
+    const totalWeight = evidence.reduce((sum, item) => sum + item.weight, 0) || 1;
+    const raw = evidence.reduce((sum, item) => sum + item.score * item.weight, 0) / totalWeight;
+    const score = clamp(Math.round((raw + 100) / 2), 0, 100);
+    const level = score >= 68 ? "เด่น" : score >= 45 ? "ผสม" : "ต้องบริหาร";
+    const text = score >= 68 ? domain.good : score >= 45 ? domain.mixed : domain.watch;
+    const pairs = [...new Map(evidence.map((item) => [item.visiblePair, item])).values()].slice(0, 3);
+    return { ...domain, score, level, text, pairs };
+  };
+
+  const segmentReading = (items, title, meaning) => {
+    const total = items.reduce((sum, item) => sum + item.weight, 0) || 1;
+    const raw = items.reduce((sum, item) => sum + item.score * item.weight, 0) / total;
+    const tone = raw >= 35 ? "หนุน" : raw >= -20 ? "ผสม" : "ควรระวัง";
+    return {
+      title, meaning, tone,
+      pairs: items.map((item) => item.visiblePair).join(" · "),
+      text: raw >= 35
+        ? "ช่วงนี้ของเบอร์ส่งแรงสนับสนุนค่อนข้างชัด ใช้เป็นจุดตั้งต้นในการแสดงความสามารถได้"
+        : raw >= -20
+          ? "มีทั้งแรงส่งและแรงต้าน ต้องเลือกใช้จุดแข็งพร้อมควบคุมพฤติกรรมที่เกิดเร็วเกินไป"
+          : "มีคู่เลขที่กระตุ้นความกดดันหรือความขัดแย้ง ควรใช้สติและระบบช่วยก่อนตัดสินใจ"
+    };
+  };
+
+  const renderPhoneReading = (analysis) => {
+    const domains = phoneDomains.map((domain) => analyzePhoneDomain(analysis, domain));
+    const positives = analysis.sequence.filter((item) => item.score >= 40).sort((a, b) => b.weight - a.weight);
+    const cautions = analysis.sequence.filter((item) => item.score < 0).sort((a, b) => b.weight - a.weight);
+    const segments = [
+      segmentReading(analysis.sequence.slice(0, 3), "ช่วงต้น", "ภาพลักษณ์ วิธีเริ่มต้น และการรับสิ่งใหม่"),
+      segmentReading(analysis.sequence.slice(3, 6), "ช่วงกลาง", "พฤติกรรมในชีวิตประจำวัน งาน และความสัมพันธ์"),
+      segmentReading(analysis.sequence.slice(6), "คู่ท้าย", "แรงตัดสินใจ ผลลัพธ์ และพฤติกรรมที่แสดงชัดที่สุด")
+    ];
+    $("#phone-reading").innerHTML = `<section class="content-card deep-reading-card">
+      <div class="section-title"><div><span class="result-kicker">บทอ่านเชิงลึก</span><h2>คำทำนายเบอร์แบบละเอียด</h2>
+      <p>แยกจากธีม คะแนน และตำแหน่งจริงของคู่เลขในเบอร์นี้</p></div></div>
+      <div class="reading-intro">
+        <p><b>ภาพรวม:</b> เบอร์นี้มีแรงส่งเด่นจาก ${positives.length ? positives.slice(0, 3).map((item) => `${item.visiblePair} ${item.title}`).join(", ") : "การผสมกันของคู่เลขหลายตำแหน่ง"}.</p>
+        <p><b>จุดที่ต้องรู้ทัน:</b> ${cautions.length ? cautions.slice(0, 3).map((item) => `${item.visiblePair} ${item.title}`).join(", ") : "ไม่พบคู่ลบเด่น แต่ยังควรใช้จุดแข็งอย่างมีสติ"}.</p>
+      </div>
+      <div class="position-reading-grid">${segments.map((segment) => `<article class="position-reading">
+        <header><span>${segment.title}</span><b>${segment.tone}</b></header><small>${segment.meaning}</small>
+        <strong>${segment.pairs || "—"}</strong><p>${segment.text}</p>
+      </article>`).join("")}</div>
+      <div class="domain-reading-grid">${domains.map((domain) => `<article class="domain-reading">
+        <div class="domain-head"><span>${domain.icon}</span><div><h3>${domain.title}</h3><small>${domain.level}</small></div><b>${domain.score}</b></div>
+        <div class="domain-bar"><i style="width:${domain.score}%"></i></div>
+        <p>${domain.text}</p>
+        <p class="domain-evidence"><b>คู่เลขที่เกี่ยวข้อง:</b> ${domain.pairs.map((item) => `${item.visiblePair} ${item.title}`).join(" · ")}</p>
+        <p class="domain-advice"><b>แนวทางใช้พลัง:</b> ${domain.advice}</p>
+      </article>`).join("")}</div>
+    </section>`;
+  };
+
   const renderPhone = (analysis) => {
     const verdict = analysis.score >= 75 ? "พลังโดยรวมโดดเด่น" : analysis.score >= 60 ? "ภาพรวมค่อนข้างดี" : analysis.score >= 45 ? "พลังผสม ต้องบริหารให้ดี" : "ควรเลือกใช้อย่างมีสติ";
     $("#phone-summary").innerHTML = `<section class="summary-card">
@@ -179,6 +289,7 @@
       <h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p>
       <p class="pair-advice"><b>คำแนะนำ:</b> ${escapeHtml(item.advice)}</p>
     </article>`).join("");
+    renderPhoneReading(analysis);
   };
 
   const polar = (cx, cy, radius, angle) => {
@@ -224,6 +335,146 @@
       career: career.length ? `ภพกัมมะมีดาว ${career.join(", ")} ทำให้งานและบทบาทสังคมเป็นพื้นที่พัฒนาสำคัญ` : "ภพกัมมะว่าง ต้องอ่านเจ้าเรือนและดาวจรประกอบ จึงไม่ควรสรุปอาชีพจากภพเดียว",
       relationship: relationship.length ? `ภพปัตนิมีดาว ${relationship.join(", ")} ความสัมพันธ์จึงมีบทเรียนและพลังของดาวเหล่านี้ชัด` : "ภพปัตนิว่างไม่ได้แปลว่าไม่มีคู่ ต้องพิจารณาเจ้าเรือนและดาวจรประกอบ"
     };
+  };
+
+  const ascendantReadings = {
+    เมษ: "มีแรงเริ่มต้นสูง กล้าตัดสินใจ และต้องการเห็นความคืบหน้าเร็ว จุดพัฒนาคือการชะลอเพื่อฟังข้อมูลและความรู้สึกของคนอื่น",
+    พฤษภ: "ต้องการความมั่นคง จัดการทรัพยากรได้ดี และค่อย ๆ สร้างผลลัพธ์ที่ยั่งยืน จุดพัฒนาคือการยอมเปลี่ยนเมื่อเงื่อนไขเดิมไม่ตอบโจทย์",
+    เมถุน: "เรียนรู้ไว เชื่อมโยงข้อมูลเก่ง และปรับภาษาเข้ากับผู้คนได้หลายแบบ จุดพัฒนาคือการเลือกเรื่องสำคัญและทำให้จบ",
+    กรกฎ: "รับรู้บรรยากาศและความรู้สึกเก่ง ให้คุณค่ากับครอบครัวและความปลอดภัย จุดพัฒนาคือการแยกความกังวลออกจากข้อเท็จจริง",
+    สิงห์: "ต้องการสร้างผลงานที่มีความหมาย มีความภูมิใจและภาวะผู้นำ จุดพัฒนาคือการเปิดพื้นที่ให้คนอื่นมีบทบาทโดยไม่รู้สึกว่าสูญเสียคุณค่า",
+    กันย์: "ละเอียด ชอบปรับปรุงระบบ และมองเห็นสิ่งที่ควรแก้ก่อนคนอื่น จุดพัฒนาคือการไม่ใช้มาตรฐานสูงกดดันตนเองหรือคนรอบตัว",
+    ตุล: "มองเห็นหลายฝ่าย รักความยุติธรรม และมีทักษะประสานความร่วมมือ จุดพัฒนาคือการตัดสินใจให้ชัดเมื่อไม่สามารถรักษาสมดุลทุกฝ่ายได้",
+    พิจิก: "มองลึก อ่านแรงจูงใจเก่ง และผ่านภาวะกดดันได้ดี จุดพัฒนาคือการลดการระแวงและบอกความต้องการก่อนสะสมความไม่พอใจ",
+    ธนู: "มองภาพใหญ่ รักการเรียนรู้ และต้องการอิสระในการเติบโต จุดพัฒนาคือการเปลี่ยนวิสัยทัศน์ให้เป็นแผนที่วัดผลและติดตามได้",
+    มังกร: "จริงจัง รับผิดชอบ และวางเป้าหมายระยะยาวได้ดี จุดพัฒนาคือการยอมพักและไม่ประเมินคุณค่าตนเองจากผลงานเพียงอย่างเดียว",
+    กุมภ์: "คิดต่าง สนใจระบบและอนาคต และต้องการทำสิ่งที่มีประโยชน์ต่อคนหมู่มาก จุดพัฒนาคือการเชื่อมแนวคิดกับความต้องการของคนจริง ๆ",
+    มีน: "มีจินตนาการ สัญชาตญาณ และเข้าใจอารมณ์ที่ละเอียด จุดพัฒนาคือการกำหนดขอบเขตและแปลงความรู้สึกเป็นการตัดสินใจที่ชัด"
+  };
+
+  const planetRoles = {
+    Sun: "ตัวตน ศักดิ์ศรี ภาวะผู้นำ และความต้องการเป็นที่ยอมรับ",
+    Moon: "อารมณ์ ความเคยชิน ความปลอดภัยภายใน และการตอบสนองต่อผู้คน",
+    Mars: "แรงผลักดัน การแข่งขัน ความกล้า และวิธีจัดการความขัดแย้ง",
+    Mercury: "ความคิด การเรียนรู้ การสื่อสาร เอกสาร และการเจรจา",
+    Jupiter: "ปัญญา หลักการ โอกาส ผู้ใหญ่ และการขยายตัว",
+    Venus: "ความรัก ความสัมพันธ์ รสนิยม ความสุข และการประนีประนอม",
+    Saturn: "ความรับผิดชอบ ข้อจำกัด วินัย เวลา และบทเรียนระยะยาว",
+    Rahu: "ความทะเยอทะยาน สิ่งใหม่ ความไม่แน่นอน และความต้องการที่ขยายตัว",
+    Ketu: "สัญชาตญาณ การตัดสิ่งเก่า ความสนใจเฉพาะทาง และเรื่องที่อธิบายยาก"
+  };
+
+  const planetsAtHouses = (natal, houses) => natal.positions.filter((planet) => houses.includes(planet.house));
+
+  const scoreNatalDomain = (natal, houses, focusKeys = []) => {
+    let score = 58;
+    planetsAtHouses(natal, houses).forEach((planet) => {
+      score += (planet.nature || 0) * 4;
+      if (planet.dignity === "อุจจ์") score += 7;
+      if (planet.dignity === "เกษตร") score += 5;
+      if (planet.dignity === "นิจ") score -= 8;
+    });
+    natal.positions.filter((planet) => focusKeys.includes(planet.key)).forEach((planet) => {
+      score += (planet.nature || 0) * 3;
+      if (planet.dignity === "อุจจ์") score += 5;
+      if (planet.dignity === "นิจ") score -= 6;
+    });
+    return clamp(Math.round(score), 28, 92);
+  };
+
+  const houseEvidence = (natal, houses) => {
+    const planets = planetsAtHouses(natal, houses);
+    return planets.length
+      ? planets.map((planet) => `${planet.thai}อยู่ภพ ${planet.house}${planet.dignity !== "ปกติ" ? ` (${planet.dignity})` : ""}`).join(" · ")
+      : `ภพ ${houses.join(", ")} ไม่มีดาวสถิต ต้องอ่านเจ้าเรือนและดาวจรประกอบ`;
+  };
+
+  const buildNatalDomains = (natal) => {
+    const ascName = Astro.signs[natal.ascSign].name;
+    const sun = natal.positions.find((planet) => planet.key === "Sun");
+    const moon = natal.positions.find((planet) => planet.key === "Moon");
+    const venus = natal.positions.find((planet) => planet.key === "Venus");
+    const jupiter = natal.positions.find((planet) => planet.key === "Jupiter");
+    return [
+      {
+        title: "ตัวตนและนิสัยพื้นฐาน", icon: "ลั",
+        score: scoreNatalDomain(natal, [1, 3], ["Sun", "Moon"]),
+        text: `ลัคนา${ascName}ทำให้${ascendantReadings[ascName]} อาทิตย์อยู่ภพ ${sun.house} เน้น${Astro.houseNames[sun.house - 1][1]} ขณะที่จันทร์อยู่ภพ ${moon.house} ทำให้อารมณ์ต้องการความมั่นคงผ่าน${Astro.houseNames[moon.house - 1][1]}.`,
+        evidence: `อาทิตย์ ${sun.signName} · จันทร์ ${moon.signName} · ธาตุเด่น ${Object.entries(natal.personality.elementTotals).sort((a, b) => b[1] - a[1])[0][0]}`,
+        advice: "ใช้ลัคนาเป็นวิธีลงมือ ใช้อาทิตย์เป็นเป้าหมาย และใช้จันทร์เป็นสัญญาณว่าต้องพักหรือปรับสภาพแวดล้อมเมื่อใด"
+      },
+      {
+        title: "การงานและความก้าวหน้า", icon: "งาน",
+        score: scoreNatalDomain(natal, [6, 10, 11], ["Sun", "Mercury", "Saturn"]),
+        text: `ภพกัมมะบอกวิธีสร้างชื่อเสียง ภพอริบอกงานประจำและโจทย์ที่ต้องแก้ ส่วนภพลาภะบอกผลตอบแทนและเครือข่าย ดวงนี้จึงก้าวหน้าได้เมื่อเชื่อมความรับผิดชอบเข้ากับงานที่วัดผลได้ และไม่รับทุกปัญหามาเป็นหน้าที่ของตน.`,
+        evidence: houseEvidence(natal, [6, 10, 11]),
+        advice: "เลือกบทบาทที่ให้อำนาจตัดสินใจสอดคล้องกับความรับผิดชอบ พร้อมเก็บหลักฐานผลงานและสร้างผู้สนับสนุนระยะยาว"
+      },
+      {
+        title: "การเงินและทรัพย์สิน", icon: "฿",
+        score: scoreNatalDomain(natal, [2, 8, 11], ["Jupiter", "Venus"]),
+        text: `ภพกดุมภะสะท้อนรายรับและการเก็บทรัพย์ ภพมรณะเกี่ยวกับเงินร่วม ภาระ และความผันผวน ส่วนภพลาภะคือผลกำไร ดวงนี้ควรแยกเงินที่ควบคุมเองออกจากภาระร่วม และใช้ความรู้มากกว่าความเร่งรีบในการตัดสินใจเรื่องเงิน.`,
+        evidence: houseEvidence(natal, [2, 8, 11]),
+        advice: "ทำบัญชีแยกเงินสำรอง เงินลงทุน และภาระร่วม ตรวจเงื่อนไขที่ย้อนกลับยากก่อนตกลงทุกครั้ง"
+      },
+      {
+        title: "ความรักและคู่สัมพันธ์", icon: "♡",
+        score: scoreNatalDomain(natal, [5, 7, 8], ["Venus", "Moon"]),
+        text: `ภพปุตตะบอกการแสดงความรัก ภพปัตนิบอกคู่และหุ้นส่วน และภพมรณะบอกความไว้ใจเชิงลึก ศุกร์อยู่ภพ ${venus.house} ราศี${venus.signName}${venus.dignity !== "ปกติ" ? `ในสถานะ${venus.dignity}` : ""} จึงต้องการความสัมพันธ์ที่ให้ทั้งความเข้าใจและคุณค่าที่จับต้องได้.`,
+        evidence: houseEvidence(natal, [5, 7, 8]),
+        advice: "ตกลงเรื่องเวลา เงิน ขอบเขต และวิธีแก้ความขัดแย้งให้ชัดก่อนความรู้สึกสะสม"
+      },
+      {
+        title: "สุขภาพและการรับแรงกดดัน", icon: "＋",
+        score: scoreNatalDomain(natal, [1, 6, 8, 12], ["Mars", "Saturn"]),
+        text: "ภพตนุ อริ มรณะ และวินาศใช้ดูรูปแบบพลังชีวิต ภาระ และการพักฟื้นในเชิงโหราศาสตร์ เมื่อดาวหนักกระทบภพเหล่านี้ เจ้าชะตามักพยายามควบคุมสถานการณ์จนลืมสังเกตความเหนื่อยของตน.",
+        evidence: houseEvidence(natal, [1, 6, 8, 12]),
+        advice: "รักษาตารางนอน การพัก และขอบเขตงานให้สม่ำเสมอ หากมีอาการผิดปกติควรใช้ข้อมูลทางการแพทย์ ไม่ใช้คำทำนายแทนการตรวจรักษา"
+      },
+      {
+        title: "โชค โอกาส และการเติบโต", icon: "✦",
+        score: scoreNatalDomain(natal, [5, 9, 11], ["Jupiter"]),
+        text: `พฤหัสอยู่ภพ ${jupiter.house} ราศี${jupiter.signName}${jupiter.dignity !== "ปกติ" ? `ในสถานะ${jupiter.dignity}` : ""} โอกาสจึงมาจาก${Astro.houseNames[jupiter.house - 1][1]} มากกว่าการรอจังหวะสุ่ม ภพศุภะและลาภะชี้ว่าการเรียนรู้ ผู้ใหญ่ และเครือข่ายเป็นตัวขยายผล.`,
+        evidence: houseEvidence(natal, [5, 9, 11]),
+        advice: "ลงทุนในความรู้ที่ต่อยอดได้จริง และรักษาความสัมพันธ์กับคนที่มองเห็นศักยภาพระยะยาว"
+      }
+    ];
+  };
+
+  const renderNatalReading = (natal) => {
+    const domains = buildNatalDomains(natal);
+    const fallen = natal.positions.filter((planet) => planet.dignity === "นิจ");
+    const strong = natal.positions.filter((planet) => ["อุจจ์", "เกษตร"].includes(planet.dignity));
+    const kalakini = natal.thaksa.find((item) => item.role === "กาลกิณี");
+    const houses = natal.houses.map((house) => {
+      const planets = house.planets;
+      return `<article class="house-reading">
+        <header><span>${house.number}</span><div><h3>${house.name}</h3><small>${house.meaning}</small></div></header>
+        <p>${planets.length
+          ? `มีดาว ${planets.map((planet) => `${planet.thai}${planet.dignity !== "ปกติ" ? `(${planet.dignity})` : ""}`).join(", ")} ทำให้เรื่องของภพนี้แสดงออกผ่าน${planets.map((planet) => planetRoles[planet.key]).join(" และ ")}`
+          : "ไม่มีดาวสถิตโดยตรง ไม่ได้แปลว่าเรื่องนี้ไม่มีความสำคัญ แต่ผลจะเปิดชัดเมื่อเจ้าเรือนหรือดาวจรเข้ามากระตุ้น"}</p>
+      </article>`;
+    }).join("");
+    $("#natal-reading").innerHTML = `<section class="content-card deep-reading-card">
+      <div class="section-title"><div><span class="result-kicker">บทอ่านพื้นดวง</span><h2>คำทำนายดวงแบบละเอียด</h2>
+      <p>สังเคราะห์ลัคนา ดาวกำเนิด ภพ นวางค์ มาตรฐานดาว และมหาทักษา</p></div></div>
+      <div class="reading-intro">
+        <p><b>แกนชีวิต:</b> ลัคนา${Astro.signs[natal.ascSign].name}ทำให้${ascendantReadings[Astro.signs[natal.ascSign].name]}</p>
+        <p><b>ดาวที่ช่วยส่งกำลัง:</b> ${strong.length ? strong.map((planet) => `${planet.thai} ${planet.dignity}`).join(" · ") : "ไม่มีดาวอุจจ์หรือเกษตรเด่น ต้องใช้การบริหารดาวร่วมกัน"}.</p>
+        <p><b>บทเรียนสำคัญ:</b> ${fallen.length ? `${fallen.map((planet) => `${planet.thai}นิจ`).join(" · ")} ต้องพัฒนาผ่านวินัยและประสบการณ์` : "ไม่พบดาวนิจในกลุ่มหลัก"} · กาลกิณีมหาทักษาคือ ${kalakini?.planet || "ไม่ระบุ"} จึงควรระวังการใช้พลังของดาวนี้แบบสุดโต่ง.</p>
+      </div>
+      <div class="domain-reading-grid natal-domain-grid">${domains.map((domain) => `<article class="domain-reading">
+        <div class="domain-head"><span>${domain.icon}</span><div><h3>${domain.title}</h3><small>${domain.score >= 70 ? "แรงส่งดี" : domain.score >= 52 ? "ต้องบริหารสมดุล" : "เป็นบทเรียนสำคัญ"}</small></div><b>${domain.score}</b></div>
+        <div class="domain-bar"><i style="width:${domain.score}%"></i></div><p>${domain.text}</p>
+        <p class="domain-evidence"><b>หลักฐานในดวง:</b> ${domain.evidence}</p>
+        <p class="domain-advice"><b>แนวทาง:</b> ${domain.advice}</p>
+      </article>`).join("")}</div>
+      <details class="house-reading-details">
+        <summary>อ่านคำทำนายครบทั้ง 12 ภพ</summary>
+        <div class="house-reading-grid">${houses}</div>
+      </details>
+    </section>`;
+    $("#natal-reading").hidden = false;
   };
 
   const renderNatal = (natal) => {
@@ -274,7 +525,8 @@
       <div class="detail-panel" data-panel="aspects" hidden><div class="aspect-list">${aspects}</div></div>
       <p class="method-note">“เต็มรูปแบบ” ในเว็บนี้หมายถึงชุดคำนวณราศีจักรหลัก ไม่รวมทักษาจรเฉพาะสำนัก ฤกษ์พิธี หรือลายมือโหรที่ต้องใช้ดุลยพินิจ</p>
     </section>`;
-    ["#natal-summary", "#natal-chart", "#natal-details"].forEach((selector) => $(selector).hidden = false);
+    renderNatalReading(natal);
+    ["#natal-summary", "#natal-chart", "#natal-details", "#natal-reading"].forEach((selector) => $(selector).hidden = false);
   };
 
   const chartAxisForMatch = (natal, index) => ({
@@ -283,20 +535,47 @@
   });
 
   const renderMatch = (phoneProfile, natal) => {
+    const codeMeanings = {
+      E: "ใช้พลังจากการลงมือและปฏิสัมพันธ์กับคน", I: "ใช้พลังจากการคิดทบทวนและพื้นที่ส่วนตัว",
+      S: "เชื่อข้อมูลที่จับต้องได้และประสบการณ์จริง", N: "มองความเป็นไปได้ ความหมาย และภาพอนาคต",
+      T: "ตัดสินใจจากเหตุผล หลักเกณฑ์ และผลลัพธ์", F: "ตัดสินใจโดยคำนึงถึงคุณค่าและผลกระทบต่อความรู้สึก",
+      J: "ต้องการโครงสร้าง แผน และความชัดเจน", P: "ต้องการพื้นที่ทดลองและปรับตามสถานการณ์"
+    };
+    const axisAdvice = [
+      "จัดสมดุลระหว่างเวลาพบผู้คนกับเวลาทบทวนคนเดียว",
+      "เริ่มจากภาพใหญ่แล้วตรวจด้วยข้อเท็จจริงก่อนตัดสินใจ",
+      "แยกการวิเคราะห์เหตุผลออกจากการรับฟังความรู้สึก",
+      "กำหนดเป้าหมายและเส้นตาย แต่เว้นวิธีทำให้ปรับได้"
+    ];
     const rows = phoneProfile.axes.map((axis, index) => {
       const chartAxis = chartAxisForMatch(natal, index);
       const same = axis.dominant.code === chartAxis.dominant;
       return {
         title: axis.title, phone: axis.dominant.code, natal: chartAxis.dominant,
-        same, similarity: 100 - Math.abs(axis.leftPercent - chartAxis.leftPercent)
+        same, similarity: 100 - Math.abs(axis.leftPercent - chartAxis.leftPercent),
+        explanation: same
+          ? `พื้นดวงและเบอร์ไปทาง ${axis.dominant.code} เหมือนกัน จึงย้ำลักษณะ “${codeMeanings[axis.dominant.code]}” ให้แสดงออกง่ายและต่อเนื่อง`
+          : `พื้นดวงเอนทาง ${chartAxis.dominant} (${codeMeanings[chartAxis.dominant]}) แต่เบอร์ผลักไปทาง ${axis.dominant.code} (${codeMeanings[axis.dominant.code]}) จึงช่วยเติมมุมที่ขาดแต่ใช้พลังมากขึ้น`,
+        advice: axisAdvice[index]
       };
     });
     const score = Math.round(rows.reduce((sum, row) => sum + row.similarity, 0) / rows.length);
     const label = score >= 85 ? "สอดคล้องสูงมาก" : score >= 72 ? "สอดคล้องค่อนข้างดี" : score >= 58 ? "ช่วยเสริมมุมที่ต่าง" : "มีแรงผลักคนละทิศ";
+    const strongest = [...rows].sort((a, b) => b.similarity - a.similarity)[0];
+    const mostDifferent = [...rows].sort((a, b) => a.similarity - b.similarity)[0];
     $("#match-result").innerHTML = `<section class="content-card match-card">
       <div class="match-score"><span>เบอร์ Match กับพื้นดวง</span><strong>${score}%</strong><b>${label}</b></div>
       <div class="match-grid">${rows.map((row) => `<div class="match-row"><span>${escapeHtml(row.title)}</span><b class="${row.same ? "same" : "different"}">${row.phone} ${row.same ? "=" : "↔"} ${row.natal}</b></div>`).join("")}</div>
       <p>${score >= 72 ? "เบอร์ขยายบุคลิกที่มีอยู่เดิมได้ค่อนข้างเป็นธรรมชาติ" : "เบอร์กระตุ้นให้แสดงพฤติกรรมบางด้านต่างจากพื้นดวง จึงอาจช่วยพัฒนาได้แต่ต้องสังเกตความฝืนของตน"}</p>
+      <div class="match-reading">
+        <h3>คำอธิบายความเข้ากันแบบรายด้าน</h3>
+        ${rows.map((row) => `<article><header><b>${row.title}</b><span>${Math.round(row.similarity)}% สอดคล้อง</span></header>
+          <p>${row.explanation}</p><small><b>วิธีบริหาร:</b> ${row.advice}</small></article>`).join("")}
+        <div class="match-conclusion">
+          <p><b>จุดที่เบอร์ส่งเสริมดีที่สุด:</b> ${strongest.title} — ความสอดคล้อง ${Math.round(strongest.similarity)}%</p>
+          <p><b>จุดที่ต้องสังเกตตัวเองมากที่สุด:</b> ${mostDifferent.title} — ${mostDifferent.same ? "แม้ไปทางเดียวกัน แต่อาจขยายลักษณะนี้มากเกินสมดุล" : "เบอร์และพื้นดวงดึงคนละทาง ควรเลือกใช้ให้เหมาะกับสถานการณ์"}</p>
+        </div>
+      </div>
     </section>`;
     $("#match-result").hidden = false;
   };
@@ -363,6 +642,29 @@
     });
   };
 
+  const buildTransitDomainReadings = (range) => {
+    const definitions = [
+      { title: "งานและชื่อเสียง", keywords: ["งาน", "ชื่อเสียง", "สื่อสาร", "เครือข่าย"], good: "เหมาะกับการขยับบทบาท ผลักดันงาน และสร้างการยอมรับ โดยต้องเลือกช่วงคะแนนเด่นเพื่อเริ่มเรื่องสำคัญ", watch: "งานมีจังหวะกดดันหรือเปลี่ยนทิศ ควรเผื่อเวลา ตรวจขอบเขต และหลีกเลี่ยงการรับปากเพราะแรงเร่ง" },
+      { title: "การเงิน", keywords: ["การเงิน", "รายได้", "รายจ่าย", "ทรัพย์"], good: "มีช่วงที่ต่อยอดรายได้หรือวางแผนทรัพย์สินได้ดี เหมาะกับการตัดสินใจบนข้อมูลและเป้าหมายระยะยาว", watch: "ควรระวังรายจ่าย ภาระร่วม หรือการตัดสินใจจากความคาดหวังเร็วเกินไป" },
+      { title: "ความรักและหุ้นส่วน", keywords: ["ความสัมพันธ์", "ครอบครัว"], good: "ช่วงที่คะแนนดีเหมาะกับการคุยข้อตกลง วางแผนร่วม และสร้างความไว้ใจจากการกระทำที่สม่ำเสมอ", watch: "เมื่อคะแนนลดให้ระวังการตีความแทนกัน ความเงียบ และการนำความกดดันเรื่องอื่นมาปะปนกับความสัมพันธ์" },
+      { title: "พลังใจและสุขภาพ", keywords: ["สุขภาพ", "ตัวตน", "เปลี่ยนแปลง", "เบื้องหลัง"], good: "จังหวะหนุนเหมาะกับการปรับกิจวัตรและสร้างวินัยที่ทำต่อเนื่องได้", watch: "ช่วงแรงกดดันควรลดงานที่ไม่จำเป็น รักษาการพัก และไม่ใช้คำทำนายแทนข้อมูลทางการแพทย์" }
+    ];
+    const allNotes = range.samples.flatMap((sample) => sample.notes.map((note) => ({ ...note, dateText: sample.dateText })));
+    return definitions.map((definition) => {
+      const notes = allNotes.filter((note) => definition.keywords.some((keyword) => note.text.includes(keyword)));
+      const goodCount = notes.filter((note) => note.tone === "good").length;
+      const watchCount = notes.filter((note) => note.tone === "watch").length;
+      const balance = notes.length ? (goodCount - watchCount) / notes.length : 0;
+      const score = clamp(Math.round(range.average + balance * 18), 28, 92);
+      const evidence = [...new Map(notes.map((note) => [note.text, note])).values()].slice(0, 3);
+      return {
+        ...definition, score,
+        text: score >= 60 ? definition.good : definition.watch,
+        evidence
+      };
+    });
+  };
+
   const renderTransitRange = (range) => {
     lastTransitRange = range;
     visibleSamples = 16;
@@ -376,12 +678,22 @@
     </section>`;
     $("#transit-timeline").innerHTML = renderTimeline(range);
     const dateList = (items) => items.map((sample) => `<div class="date-score"><span>${formatThaiDate(sample.dateText)}</span><b>${sample.score}</b></div>`).join("");
+    const domainReadings = buildTransitDomainReadings(range);
     $("#transit-highlights").innerHTML = `<section class="highlight-grid">
       <div class="highlight-box good"><h3>ช่วงคะแนนเด่น</h3><div class="date-score-list">${dateList(range.best)}</div></div>
       <div class="highlight-box watch"><h3>ช่วงที่ควรระวัง</h3><div class="date-score-list">${dateList(range.watch)}</div></div>
       <div class="recurring-list"><h3>ประเด็นที่เกิดซ้ำในช่วงนี้</h3>
         <ul>${(range.recurring.length ? range.recurring : [{ text: "ภาพรวมไม่มีแรงกระทบเด่นซ้ำหลายช่วง", count: 1 }]).map((item) => `<li>${escapeHtml(item.text)}${item.count > 1 ? ` · พบ ${item.count} จุด` : ""}</li>`).join("")}</ul>
       </div>
+    </section>
+    <section class="content-card deep-reading-card transit-deep-reading">
+      <div class="section-title"><div><span class="result-kicker">คำทำนายดวงจรเชิงลึก</span><h2>อ่านผลกระทบรายด้านตลอดช่วง</h2>
+      <p>สังเคราะห์ทุกจุดคำนวณ ไม่ได้ตัดสินจากวันเดียว</p></div></div>
+      <div class="domain-reading-grid">${domainReadings.map((domain) => `<article class="domain-reading">
+        <div class="domain-head"><span>◷</span><div><h3>${domain.title}</h3><small>${domain.score >= 68 ? "แรงหนุนมากกว่าแรงต้าน" : domain.score >= 50 ? "มีทั้งจังหวะหนุนและระวัง" : "ควรวางแผนเผื่อความเสี่ยง"}</small></div><b>${domain.score}</b></div>
+        <div class="domain-bar"><i style="width:${domain.score}%"></i></div><p>${domain.text}</p>
+        <p class="domain-evidence"><b>กระแสดาวที่พบ:</b> ${domain.evidence.length ? domain.evidence.map((note) => note.text).join(" · ") : "ไม่มีสัญญาณซ้ำเด่นในช่วงตัวอย่าง"}</p>
+      </article>`).join("")}</div>
     </section>`;
     renderTransitSamples();
     $("#transit-result").hidden = false;
@@ -472,7 +784,7 @@
     }
     const phoneAnalysis = analyzePhone(phone);
     renderPhone(phoneAnalysis);
-    ["#natal-summary", "#natal-chart", "#natal-details", "#match-result"].forEach((selector) => $(selector).hidden = true);
+    ["#natal-summary", "#natal-chart", "#natal-details", "#natal-reading", "#match-result"].forEach((selector) => $(selector).hidden = true);
     const birthDate = $("#birth-date").value;
     if (birthDate) {
       try {
