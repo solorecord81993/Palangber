@@ -110,7 +110,7 @@
   const buildPairDetail = (item) => {
     const first = digitArchetypes[Number(item.visiblePair[0])] || digitArchetypes[0];
     const second = digitArchetypes[Number(item.visiblePair[1])] || digitArchetypes[0];
-    const themes = item.themes || [];
+    const themes = Array.isArray(item.themes) ? item.themes : String(item.themes || "").split(",").filter(Boolean);
     const themeText = themes.slice(0, 3).join(" การ") || "การตัดสินใจและชีวิตประจำวัน";
     const positive = item.polarity === "positive";
     const caution = item.polarity === "caution";
